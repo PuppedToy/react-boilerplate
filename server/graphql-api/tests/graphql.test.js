@@ -86,5 +86,11 @@ describe('GraphQL Server', () => {
         expect(controller).toHaveProperty('getTodo');
       });
     });
+
+    describe('Reset', () => {
+      it('should exist in controller', () => {
+        expect(controller).toHaveProperty('reset');
+      });
+    });
   });
 });
