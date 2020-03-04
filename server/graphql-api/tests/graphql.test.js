@@ -104,6 +104,18 @@ describe('GraphQL Server', () => {
         expect(result instanceof Array).toBeTruthy();
         expect(result.length).toBe(0);
       });
+
+      it('should return a list with the same item that was returned with a addTodo', () => {
+        const newTodo = {
+          title: 'Do something new',
+        };
+
+        const resultTodo = controller.addTodo(newTodo);
+        const todoList = controller.getTodoList();
+        expect(todoList instanceof Array).toBeTruthy();
+        expect(todoList.length).toBe(1);
+        expect(todoList[0]).toEqual(resultTodo);
+      });
     });
 
     describe('Reset', () => {
@@ -124,6 +136,18 @@ describe('GraphQL Server', () => {
         const resultTodo2 = controller.addTodo(todo2);
 
         expect(resultTodo2.id).toBe(1);
+      });
+
+      it('should make next getTodoList call to return an empty list', () => {
+        const newTodo = {
+          title: 'Do something new',
+        };
+
+        controller.addTodo(newTodo);
+        controller.reset();
+        const todoList = controller.getTodoList();
+        expect(todoList instanceof Array).toBeTruthy();
+        expect(todoList.length).toBe(0);
       });
     });
   });
