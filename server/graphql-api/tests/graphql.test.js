@@ -153,6 +153,40 @@ describe('GraphQL Server', () => {
       });
     });
 
+    describe('Toggle to do', () => {
+      it('should exist in controller', () => {
+        expect(controller).toHaveProperty('toggleTodo');
+      });
+
+      it('should return an error if the id does not exist', () => {
+        expect(controller.toggleTodo({ id: 1 })).toThrow();
+      });
+
+      it('should return the item with done field as true after toggling it', () => {
+        const newTodo = {
+          title: 'Do something new',
+        };
+
+        const { id } = controller.addTodo(newTodo);
+        const resultToggle = controller.toggleTodo({ id });
+        expect(resultToggle).toHaveProperty('done', 'true');
+      });
+
+      it('should return the same done value after toggling it twice and the same when toggling it once', () => {
+        const newTodo = {
+          title: 'Do something new',
+        };
+
+        const resultAddTodo = controller.addTodo(newTodo);
+        const { id } = resultAddTodo;
+        const resultToggle1 = controller.toggleTodo({ id });
+        const resultToggle2 = controller.toggleTodo({ id });
+
+        expect(resultToggle1).not.toEqual(resultAddTodo);
+        expect(resultToggle2).toEqual(resultAddTodo);
+      });
+    });
+
     describe('Reset', () => {
       it('should exist in controller', () => {
         expect(controller).toHaveProperty('reset');
