@@ -5,7 +5,7 @@ function ping() {
 let idCounter = 1;
 
 function addTodo({ title }) {
-  const newItem = { title, id: idCounter };
+  const newItem = { title, id: idCounter, done: false };
   idCounter += 1;
   return newItem;
 }
