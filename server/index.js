@@ -54,3 +54,5 @@ app.listen(port, host, async err => {
     logger.appStarted(port, prettyHost);
   }
 });
+
+module.exports = app;
