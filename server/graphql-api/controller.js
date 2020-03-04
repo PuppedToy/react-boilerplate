@@ -12,7 +12,9 @@ function addTodo({ title }) {
 
 function getTodo() {}
 
-function reset() {}
+function reset() {
+  idCounter = 1;
+}
 
 const controller = {
   ping,
