@@ -91,6 +91,21 @@ describe('GraphQL Server', () => {
       it('should exist in controller', () => {
         expect(controller).toHaveProperty('reset');
       });
+
+      it('should make further calls to addTodo return 1 as id', () => {
+        const todo1 = {
+          title: 'Do something new',
+        };
+        const todo2 = {
+          title: 'Do another new thing',
+        };
+
+        const resultTodo1 = controller.addTodo(todo1);
+        controller.reset();
+        const resultTodo2 = controller.addTodo(todo2);
+
+        expect(resultTodo2.id).toBe(resultTodo1.id);
+      });
     });
   });
 });
