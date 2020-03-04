@@ -18,9 +18,10 @@ describe('GraphQL Server', () => {
       .expect('Content-Type', 'application/json; charset=utf-8')
       .expect(200)
       .then(response => {
-        expect(response).toHaveProperty('data');
-        const { data } = response;
-        expect(typeof data).toBe('object');
+        expect(response).toHaveProperty('body');
+        const { body } = response;
+        expect(body).toHaveProperty('data');
+        const { data } = body;
         expect(data).toHaveProperty('ping', 'ping');
         done();
       });
