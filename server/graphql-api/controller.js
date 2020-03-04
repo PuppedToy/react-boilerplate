@@ -1,5 +1,12 @@
+function ping() {
+  return 'ping';
+}
+
+function addTodo() {}
+
 const controller = {
-  ping: () => 'ping',
+  ping,
+  addTodo,
 };
 
 module.exports = controller;
