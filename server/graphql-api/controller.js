@@ -3,7 +3,7 @@ function ping() {
 }
 
 function addTodo({ title }) {
-  return { title };
+  return { title, id: 1 };
 }
 
 const controller = {
