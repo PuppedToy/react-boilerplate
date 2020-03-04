@@ -158,8 +158,10 @@ describe('GraphQL Server', () => {
         expect(controller).toHaveProperty('toggleTodo');
       });
 
-      it('should return an error if the id does not exist', () => {
-        expect(controller.toggleTodo({ id: 1 })).toThrow();
+      it('should throw an error if the id does not exist', () => {
+        expect(() => {
+          controller.toggleTodo({ id: 1 });
+        }).toThrow();
       });
 
       it('should return the item with done field as true after toggling it', () => {
@@ -169,7 +171,7 @@ describe('GraphQL Server', () => {
 
         const { id } = controller.addTodo(newTodo);
         const resultToggle = controller.toggleTodo({ id });
-        expect(resultToggle).toHaveProperty('done', 'true');
+        expect(resultToggle).toHaveProperty('done', true);
       });
 
       it('should return the same done value after toggling it twice and the same when toggling it once', () => {

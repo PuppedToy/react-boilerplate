@@ -16,6 +16,15 @@ function getTodoList() {
   return todoList.slice();
 }
 
+function toggleTodo({ id }) {
+  const foundItem = todoList.find(
+    item => Object.hasOwnProperty.call(item, 'id') && item.id === id,
+  );
+  if (!foundItem) throw new Error(`Item ${id} does not exist`);
+  foundItem.done = !foundItem.done;
+  return { ...foundItem };
+}
+
 function reset() {
   idCounter = 1;
   todoList = [];
@@ -24,6 +33,7 @@ function reset() {
 const controller = {
   ping,
   addTodo,
+  toggleTodo,
   getTodoList,
   reset,
 };
