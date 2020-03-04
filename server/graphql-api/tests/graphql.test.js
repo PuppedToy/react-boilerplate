@@ -100,11 +100,11 @@ describe('GraphQL Server', () => {
           title: 'Do another new thing',
         };
 
-        const resultTodo1 = controller.addTodo(todo1);
+        controller.addTodo(todo1);
         controller.reset();
         const resultTodo2 = controller.addTodo(todo2);
 
-        expect(resultTodo2.id).toBe(resultTodo1.id);
+        expect(resultTodo2.id).toBe(1);
       });
     });
   });
