@@ -175,6 +175,41 @@ describe('GraphQL Server', () => {
 
         expect(result).toEqual(expectedResult);
       });
+
+      it('should return an empty list after adding and deleting one item', () => {
+        const newTodo = {
+          title: 'Do something new',
+        };
+
+        const { id } = controller.addTodo(newTodo);
+        controller.deleteTodo({ id });
+        const result = controller.getTodoList();
+
+        expect(result.length).toBe(0);
+      });
+
+      it('should match the expected result after deleting one item', () => {
+        const todosToAdd = [
+          { title: 'Item 1' },
+          { title: 'Item 2' },
+          { title: 'Item 3' },
+        ];
+        const todoToDelete = {
+          id: 2,
+        };
+        const expectedResult = [
+          { title: 'Item 1', id: 1, done: false },
+          { title: 'Item 3', id: 3, done: false },
+        ];
+
+        todosToAdd.forEach(todo => {
+          controller.addTodo(todo);
+        });
+        controller.deleteTodo(todoToDelete);
+        const result = controller.getTodoList();
+
+        expect(result).toEqual(expectedResult);
+      });
     });
 
     describe('Toggle to do', () => {
@@ -210,6 +245,28 @@ describe('GraphQL Server', () => {
 
         expect(resultToggle1).not.toEqual(resultAddTodo);
         expect(resultToggle2).toEqual(resultAddTodo);
+      });
+    });
+
+    describe('Delete to do', () => {
+      it('should exist in controller', () => {
+        expect(controller).toHaveProperty('deleteTodo');
+      });
+
+      it('should throw an error if the id does not exist', () => {
+        expect(() => {
+          controller.deleteTodo({ id: 1 });
+        }).toThrow();
+      });
+
+      it('should return the deleted item', () => {
+        const newTodo = {
+          title: 'Do something new',
+        };
+
+        const resultTodo = controller.addTodo(newTodo);
+        const resultDelete = controller.deleteTodo({ id: resultTodo.id });
+        expect(resultDelete).toEqual(resultTodo);
       });
     });
 
