@@ -53,6 +53,18 @@ describe('GraphQL Server', () => {
           newTodo.title,
         );
       });
+
+      it('should generate a numeric id and attach it to the response', () => {
+        const newTodo = {
+          title: 'Do something new',
+        };
+
+        const resultTodo = controller.addTodo(newTodo);
+
+        expect(resultTodo).toHaveProperty('id');
+        const { id } = resultTodo;
+        expect(typeof id).toBe('number');
+      });
     });
   });
 });
