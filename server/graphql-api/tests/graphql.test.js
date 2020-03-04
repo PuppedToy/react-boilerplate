@@ -34,7 +34,7 @@ describe('GraphQL Server', () => {
     describe('Ping service', () => {
       it('should just return ping', () => {
         expect(controller).toHaveProperty('ping');
-        expect(controller.ping()).toBe('string');
+        expect(controller.ping()).toBe('ping');
       });
     });
   });
