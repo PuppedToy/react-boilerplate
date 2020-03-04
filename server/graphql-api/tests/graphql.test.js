@@ -65,6 +65,20 @@ describe('GraphQL Server', () => {
         const { id } = resultTodo;
         expect(typeof id).toBe('number');
       });
+
+      it('should generate sequential ids for different items', () => {
+        const todo1 = {
+          title: 'Do something new',
+        };
+        const todo2 = {
+          title: 'Do another new thing',
+        };
+
+        const resultTodo1 = controller.addTodo(todo1);
+        const resultTodo2 = controller.addTodo(todo2);
+
+        expect(resultTodo2.id).toBe(resultTodo1.id + 1);
+      });
     });
   });
 });
