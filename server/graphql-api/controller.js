@@ -13,7 +13,7 @@ function addTodo({ title }) {
 }
 
 function getTodoList() {
-  return todoList;
+  return todoList.slice();
 }
 
 function reset() {
