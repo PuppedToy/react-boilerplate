@@ -2,7 +2,9 @@ function ping() {
   return 'ping';
 }
 
-function addTodo() {}
+function addTodo({ title }) {
+  return { title };
+}
 
 const controller = {
   ping,
