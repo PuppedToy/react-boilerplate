@@ -80,5 +80,11 @@ describe('GraphQL Server', () => {
         expect(resultTodo2.id).toBe(resultTodo1.id + 1);
       });
     });
+
+    describe('Get to do', () => {
+      it('should exist in controller', () => {
+        expect(controller).toHaveProperty('getTodo');
+      });
+    });
   });
 });
