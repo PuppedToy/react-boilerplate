@@ -2,8 +2,12 @@ function ping() {
   return 'ping';
 }
 
+let idCounter = 1;
+
 function addTodo({ title }) {
-  return { title, id: 1 };
+  const newItem = { title, id: idCounter };
+  idCounter += 1;
+  return newItem;
 }
 
 const controller = {
