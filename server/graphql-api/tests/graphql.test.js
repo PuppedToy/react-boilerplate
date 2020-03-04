@@ -83,6 +83,15 @@ describe('GraphQL Server', () => {
 
         expect(resultTodo2.id).toBe(resultTodo1.id + 1);
       });
+
+      it('should generate done field initialized as false and attach it to the response', () => {
+        const newTodo = {
+          title: 'Do something new',
+        };
+
+        const resultTodo = controller.addTodo(newTodo);
+        expect(resultTodo).toHaveProperty('done', false);
+      });
     });
 
     describe('Get to do list', () => {
