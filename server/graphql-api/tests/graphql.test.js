@@ -151,6 +151,30 @@ describe('GraphQL Server', () => {
         expect(todoList.length).toBe(5);
         expect(todoList).toEqual(expectedResult);
       });
+
+      it('should match the expected result for a given list after a toggle', () => {
+        const todosToAdd = [
+          { title: 'Item 1' },
+          { title: 'Item 2' },
+          { title: 'Item 3' },
+        ];
+        const todoToToggle = {
+          id: 2,
+        };
+        const expectedResult = [
+          { title: 'Item 1', id: 1, done: false },
+          { title: 'Item 2', id: 2, done: true },
+          { title: 'Item 3', id: 3, done: false },
+        ];
+
+        todosToAdd.forEach(todo => {
+          controller.addTodo(todo);
+        });
+        controller.toggleTodo(todoToToggle);
+        const result = controller.getTodoList();
+
+        expect(result).toEqual(expectedResult);
+      });
     });
 
     describe('Toggle to do', () => {
