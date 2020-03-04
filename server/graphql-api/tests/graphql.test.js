@@ -31,6 +31,10 @@ describe('GraphQL Server', () => {
   });
 
   describe('GraphQL Controller', () => {
+    beforeEach(() => {
+      controller.reset();
+    });
+
     describe('Ping service', () => {
       it('should just return ping', () => {
         expect(controller).toHaveProperty('ping');
@@ -81,9 +85,15 @@ describe('GraphQL Server', () => {
       });
     });
 
-    describe('Get to do', () => {
+    describe('Get to do list', () => {
       it('should exist in controller', () => {
-        expect(controller).toHaveProperty('getTodo');
+        expect(controller).toHaveProperty('getTodoList');
+      });
+
+      it('should return an empty list if is called before any addTodo', () => {
+        const result = controller.getTodoList();
+        expect(result instanceof Array).toBeTruthy();
+        expect(result.length).toBe(0);
       });
     });
 

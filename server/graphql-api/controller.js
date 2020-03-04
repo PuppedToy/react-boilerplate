@@ -10,7 +10,7 @@ function addTodo({ title }) {
   return newItem;
 }
 
-function getTodo() {}
+function getTodoList() {}
 
 function reset() {
   idCounter = 1;
@@ -19,7 +19,7 @@ function reset() {
 const controller = {
   ping,
   addTodo,
-  getTodo,
+  getTodoList,
   reset,
 };
 
