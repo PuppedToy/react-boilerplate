@@ -125,6 +125,32 @@ describe('GraphQL Server', () => {
         expect(todoListAfterEdition instanceof Array).toBeTruthy();
         expect(todoListAfterEdition.length).toBe(0);
       });
+
+      it('should match the expected result for a given list', () => {
+        const todosToAdd = [
+          { title: 'Item 1' },
+          { title: 'Item 2' },
+          { title: 'Item 3' },
+          { title: 'Item 4' },
+          { title: 'Item 5' },
+        ];
+        const expectedResult = [
+          { title: 'Item 1', id: 1, done: false },
+          { title: 'Item 2', id: 2, done: false },
+          { title: 'Item 3', id: 3, done: false },
+          { title: 'Item 4', id: 4, done: false },
+          { title: 'Item 5', id: 5, done: false },
+        ];
+
+        todosToAdd.forEach(todo => {
+          controller.addTodo(todo);
+        });
+
+        const todoList = controller.getTodoList();
+        expect(todoList instanceof Array).toBeTruthy();
+        expect(todoList.length).toBe(5);
+        expect(todoList).toEqual(expectedResult);
+      });
     });
 
     describe('Reset', () => {
