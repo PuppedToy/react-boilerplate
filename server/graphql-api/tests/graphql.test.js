@@ -42,6 +42,17 @@ describe('GraphQL Server', () => {
       it('should exist in controller', () => {
         expect(controller).toHaveProperty('addTodo');
       });
+
+      it('should accept an object with title and return an object with the same title', () => {
+        const newTodo = {
+          title: 'Do something new',
+        };
+
+        expect(controller.addTodo(newTodo)).toHaveProperty(
+          'title',
+          newTodo.title,
+        );
+      });
     });
   });
 });
