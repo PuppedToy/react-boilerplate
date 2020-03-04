@@ -116,6 +116,15 @@ describe('GraphQL Server', () => {
         expect(todoList.length).toBe(1);
         expect(todoList[0]).toEqual(resultTodo);
       });
+
+      it('should still return an empty list if returned list is edited', () => {
+        const todoList = controller.getTodoList();
+        todoList.push('item');
+        const todoListAfterEdition = controller.getTodoList();
+
+        expect(todoListAfterEdition instanceof Array).toBeTruthy();
+        expect(todoListAfterEdition.length).toBe(0);
+      });
     });
 
     describe('Reset', () => {
