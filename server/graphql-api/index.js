@@ -1,11 +1,15 @@
 const graphqlHTTP = require('express-graphql');
 const { buildSchema } = require('graphql');
+const { readFileSync } = require('fs');
 
-const schema = buildSchema(`type Query {
-  empty: String
-}`);
+const grpahqlSchemaFile = `${String(
+  readFileSync(`${__dirname}/schema.graphql`),
+)}`;
+const schema = buildSchema(grpahqlSchemaFile);
 
-const root = {};
+const root = {
+  ping: () => 'ping',
+};
 
 const graphqlMiddleware = graphqlHTTP({
   schema,
