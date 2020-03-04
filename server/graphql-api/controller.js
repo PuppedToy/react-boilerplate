@@ -10,7 +10,9 @@ function addTodo({ title }) {
   return newItem;
 }
 
-function getTodoList() {}
+function getTodoList() {
+  return [];
+}
 
 function reset() {
   idCounter = 1;
