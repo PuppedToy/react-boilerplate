@@ -10,9 +10,12 @@ function addTodo({ title }) {
   return newItem;
 }
 
+function getTodo() {}
+
 const controller = {
   ping,
   addTodo,
+  getTodo,
 };
 
 module.exports = controller;
