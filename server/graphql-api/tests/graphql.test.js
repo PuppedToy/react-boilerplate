@@ -37,5 +37,11 @@ describe('GraphQL Server', () => {
         expect(controller.ping()).toBe('ping');
       });
     });
+
+    describe('Add to do', () => {
+      it('should exist in controller', () => {
+        expect(controller).toHaveProperty('addTodo');
+      });
+    });
   });
 });
