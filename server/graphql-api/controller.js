@@ -12,10 +12,13 @@ function addTodo({ title }) {
 
 function getTodo() {}
 
+function reset() {}
+
 const controller = {
   ping,
   addTodo,
   getTodo,
+  reset,
 };
 
 module.exports = controller;
