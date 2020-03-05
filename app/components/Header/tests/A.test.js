@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from 'react-testing-library';
+import { render } from '@testing-library/react';
 import renderer from 'react-test-renderer';
 import 'jest-styled-components';
 
