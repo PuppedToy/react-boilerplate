@@ -210,6 +210,31 @@ describe('GraphQL Server', () => {
 
         expect(result).toEqual(expectedResult);
       });
+
+      it('should match the expected result after editing one item', () => {
+        const todosToAdd = [
+          { title: 'Item 1' },
+          { title: 'Item 2' },
+          { title: 'Item 3' },
+        ];
+        const todoToEdit = {
+          id: 2,
+          title: 'Edited item',
+        };
+        const expectedResult = [
+          { title: 'Item 1', id: 1, done: false },
+          { title: 'Edited item', id: 2, done: false },
+          { title: 'Item 3', id: 3, done: false },
+        ];
+
+        todosToAdd.forEach(todo => {
+          controller.addTodo(todo);
+        });
+        controller.editTodo(todoToEdit);
+        const result = controller.getTodoList();
+
+        expect(result).toEqual(expectedResult);
+      });
     });
 
     describe('Toggle to do', () => {
@@ -270,6 +295,43 @@ describe('GraphQL Server', () => {
       });
     });
 
+    describe('Edit to do', () => {
+      it('should exist in controller', () => {
+        expect(controller).toHaveProperty('editTodo');
+      });
+
+      it('should throw an error if the id does not exist', () => {
+        expect(() => {
+          controller.editTodo({ id: 1 });
+        }).toThrow();
+      });
+
+      it('should return the edited item with the new title', () => {
+        const newTodo = {
+          title: 'Do something new',
+        };
+
+        const { id } = controller.addTodo(newTodo);
+        const newTitle = 'Edited todo';
+        const resultEdition = controller.editTodo({ id, title: newTitle });
+
+        expect(resultEdition).toHaveProperty('title', newTitle);
+      });
+
+      it('should not change done field', () => {
+        const newTodo = {
+          title: 'Do something new',
+        };
+
+        const { id } = controller.addTodo(newTodo);
+        const { done } = controller.toggleTodo({ id });
+        const newTitle = 'Edited todo';
+        const resultEdition = controller.editTodo({ id, title: newTitle });
+
+        expect(resultEdition).toHaveProperty('done', done);
+      });
+    });
+
     describe('Reset', () => {
       it('should exist in controller', () => {
         expect(controller).toHaveProperty('reset');
@@ -300,6 +362,10 @@ describe('GraphQL Server', () => {
         const todoList = controller.getTodoList();
         expect(todoList instanceof Array).toBeTruthy();
         expect(todoList.length).toBe(0);
+      });
+
+      it('should return true', () => {
+        expect(controller.reset()).toBeTruthy();
       });
     });
   });
