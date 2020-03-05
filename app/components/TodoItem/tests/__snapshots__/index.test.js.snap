@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<TodoItem /> Should render and match the snapshot 1`] = `
+<div
+  id="todo-1"
+>
+  <button
+    type="button"
+  >
+    One item
+  </button>
+  <button
+    data-testid="toggle"
+    src="/false"
+    type="button"
+  />
+  <button
+    data-testid="delete"
+    src="/false"
+    type="button"
+  />
+</div>
+`;
+
+exports[`<TodoItem /> Should render and match the snapshot when done is true 1`] = `
+<div
+  id="todo-1"
+>
+  <input
+    data-testid="editInput"
+    type="text"
+    value="One item"
+  />
+  <button
+    data-testid="toggle"
+    src="/true"
+    type="button"
+  />
+  <button
+    data-testid="delete"
+    src="/true"
+    type="button"
+  />
+</div>
+`;
+
+exports[`<TodoItem /> Should render and match the snapshot when focused is true 1`] = `
+<div
+  id="todo-1"
+>
+  <input
+    data-testid="editInput"
+    type="text"
+    value="One item"
+  />
+  <button
+    data-testid="toggle"
+    src="/false"
+    type="button"
+  />
+  <button
+    data-testid="delete"
+    src="/true"
+    type="button"
+  />
+</div>
+`;

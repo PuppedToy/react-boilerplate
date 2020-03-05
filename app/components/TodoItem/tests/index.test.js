@@ -68,7 +68,7 @@ describe('<TodoItem />', () => {
     expect(focusTodoMock).toHaveBeenCalled();
   });
 
-  it('Should render an input when called with focused as true', async () => {
+  it('Should render an input when called with focused as true', () => {
     const title = 'One item';
     const { getByTestId } = render(
       <TodoItem title={title} id={1} done={false} focused />,
@@ -159,17 +159,26 @@ describe('<TodoItem />', () => {
   // @TODO Further edition tests should be performed on TodoList, like checking if it actually selects
   // an item after triggering its focus todo or if it does unfocus an item after editing it
 
-  /**
-   * Unskip this test to use it
-   *
-   * @see {@link https://jestjs.io/docs/en/api#testskipname-fn}
-   */
-  it.skip('Should render and match the snapshot', () => {
+  it('Should render and match the snapshot', () => {
     const {
       container: { firstChild },
     } = render(
       <TodoItem title="One item" id={1} done={false} focused={false} />,
     );
+    expect(firstChild).toMatchSnapshot();
+  });
+
+  it('Should render and match the snapshot when focused is true', () => {
+    const {
+      container: { firstChild },
+    } = render(<TodoItem title="One item" id={1} done={false} focused />);
+    expect(firstChild).toMatchSnapshot();
+  });
+
+  it('Should render and match the snapshot when done is true', () => {
+    const {
+      container: { firstChild },
+    } = render(<TodoItem title="One item" id={1} done focused />);
     expect(firstChild).toMatchSnapshot();
   });
 });
