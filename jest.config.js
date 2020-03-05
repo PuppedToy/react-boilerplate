@@ -1,11 +1,13 @@
 module.exports = {
   collectCoverageFrom: [
     'app/**/*.{js,jsx}',
+    'server/graphql-api/**/*.js',
     '!app/**/*.test.{js,jsx}',
     '!app/*/RbGenerated*/*.{js,jsx}',
     '!app/app.js',
     '!app/global-styles.js',
     '!app/*/*/Loadable.{js,jsx}',
+    '!server/graphql-api/**/*.test.js',
   ],
   coverageThreshold: {
     global: {
