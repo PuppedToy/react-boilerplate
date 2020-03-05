@@ -1,3 +1,18 @@
+type Todo {
+  id: Int!
+  title: String!
+  done: Boolean!
+}
+
 type Query {
-  ping: String!
+  ping: String
+  getTodoList: [Todo]
+}
+
+type Mutation {
+  addTodo(title: String!): Todo
+  deleteTodo(id: Int!): Todo
+  toggleTodo(id: Int!): Todo
+  editTodo(id: Int!, title: String!): Todo
+  reset: Boolean
 }
