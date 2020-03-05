@@ -37,9 +37,16 @@ function deleteTodo({ id }) {
   return { ...foundItem };
 }
 
+function editTodo({ id, title }) {
+  const { foundItem } = findItem(id);
+  foundItem.title = title;
+  return { ...foundItem };
+}
+
 function reset() {
   idCounter = 1;
   todoList = [];
+  return true;
 }
 
 const controller = {
@@ -47,6 +54,7 @@ const controller = {
   addTodo,
   toggleTodo,
   deleteTodo,
+  editTodo,
   getTodoList,
   reset,
 };
