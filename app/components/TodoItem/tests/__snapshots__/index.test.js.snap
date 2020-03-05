@@ -10,12 +10,12 @@ exports[`<TodoItem /> Should render and match the snapshot 1`] = `
     One item
   </button>
   <button
-    data-testid="toggle"
+    data-testid="toggle-1"
     src="/false"
     type="button"
   />
   <button
-    data-testid="delete"
+    data-testid="delete-1"
     src="/false"
     type="button"
   />
@@ -27,17 +27,17 @@ exports[`<TodoItem /> Should render and match the snapshot when done is true 1`]
   id="todo-1"
 >
   <input
-    data-testid="editInput"
+    data-testid="editInput-1"
     type="text"
     value="One item"
   />
   <button
-    data-testid="toggle"
+    data-testid="toggle-1"
     src="/true"
     type="button"
   />
   <button
-    data-testid="delete"
+    data-testid="delete-1"
     src="/true"
     type="button"
   />
@@ -49,17 +49,17 @@ exports[`<TodoItem /> Should render and match the snapshot when focused is true 
   id="todo-1"
 >
   <input
-    data-testid="editInput"
+    data-testid="editInput-1"
     type="text"
     value="One item"
   />
   <button
-    data-testid="toggle"
+    data-testid="toggle-1"
     src="/false"
     type="button"
   />
   <button
-    data-testid="delete"
+    data-testid="delete-1"
     src="/true"
     type="button"
   />

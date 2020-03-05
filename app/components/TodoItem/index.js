@@ -19,7 +19,6 @@ function TodoItem({
   onChangeTodoInput,
 }) {
   const inputKeyDownHandler = ({ code, which }) => {
-    console.log(`keydown ${code}-${which}`);
     if (editTodo && ((code && code === 13) || (which && which === 13)))
       editTodo();
   };
@@ -41,7 +40,7 @@ function TodoItem({
           value={title}
           onChange={inputOnChangeHandler}
           onKeyDown={inputKeyDownHandler}
-          data-testid="editInput"
+          data-testid={`editInput-${id}`}
         />
       ) : (
         <button
@@ -55,7 +54,7 @@ function TodoItem({
         </button>
       )}
       <button
-        data-testid="toggle"
+        data-testid={`toggle-${id}`}
         src={`/${done}`}
         onClick={() => {
           if (toggleTodo) toggleTodo();
@@ -64,7 +63,7 @@ function TodoItem({
         type="button"
       />
       <button
-        data-testid="delete"
+        data-testid={`delete-${id}`}
         src={`/${focused}`}
         onClick={() => {
           if (deleteTodo) deleteTodo();

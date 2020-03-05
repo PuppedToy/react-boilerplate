@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<TodoList /> Should render and match the snapshot on empty todos 1`] = `<div />`;
+
+exports[`<TodoList /> Should render and match the snapshot with 3 todos 1`] = `<div />`;
+
+exports[`<TodoList /> Should render and match the snapshot with one todo 1`] = `<div />`;

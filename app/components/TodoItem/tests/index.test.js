@@ -31,7 +31,7 @@ describe('<TodoItem />', () => {
       />,
     );
 
-    fireEvent.click(getByTestId('delete'));
+    fireEvent.click(getByTestId('delete-1'));
     expect(deleteTodoMock).toHaveBeenCalled();
   });
 
@@ -47,7 +47,7 @@ describe('<TodoItem />', () => {
       />,
     );
 
-    fireEvent.click(getByTestId('toggle'));
+    fireEvent.click(getByTestId('toggle-1'));
     expect(toggleTodoMock).toHaveBeenCalled();
   });
 
@@ -74,7 +74,7 @@ describe('<TodoItem />', () => {
       <TodoItem title={title} id={1} done={false} focused />,
     );
 
-    expect(getByTestId('editInput')).toHaveValue(title);
+    expect(getByTestId('editInput-1')).toHaveValue(title);
   });
 
   it('Should call edit hook when pressed enter on edition mode', () => {
@@ -90,7 +90,7 @@ describe('<TodoItem />', () => {
       />,
     );
 
-    fireEvent.keyDown(getByTestId('editInput'), {
+    fireEvent.keyDown(getByTestId('editInput-1'), {
       key: 'Enter',
       keyCode: 13,
     });
@@ -111,7 +111,7 @@ describe('<TodoItem />', () => {
       />,
     );
 
-    const input = getByTestId('editInput');
+    const input = getByTestId('editInput-1');
     const newValue = 'Changed value';
 
     fireEvent.change(input, { target: { value: newValue } });
