@@ -10,8 +10,9 @@ import PropTypes from 'prop-types';
 
 import TodoItem from 'components/TodoItem';
 
-function TodoList({ todos, deleteTodo, toggleTodo }) {
+function TodoList({ todos, deleteTodo, toggleTodo, editTodo }) {
   const [focusedItem, setFocusedItem] = useState(null);
+  const [focusedItemTitle, setFocusedItemTitle] = useState(null);
 
   return (
     <div>
@@ -19,12 +20,30 @@ function TodoList({ todos, deleteTodo, toggleTodo }) {
         <TodoItem
           key={`todo-item-${id}`}
           id={id}
-          title={title}
+          title={focusedItem === id ? focusedItemTitle : title}
           done={done}
           focused={focusedItem === id}
-          focusTodo={() => setFocusedItem(id)}
-          deleteTodo={() => deleteTodo(id)}
-          toggleTodo={() => toggleTodo(id)}
+          focusTodo={() => {
+            if (focusedItem !== null && editTodo) {
+              editTodo(focusedItem, focusedItemTitle);
+            }
+            setFocusedItem(id);
+            setFocusedItemTitle(title);
+          }}
+          deleteTodo={() => {
+            if (deleteTodo) deleteTodo(id);
+          }}
+          toggleTodo={() => {
+            if (toggleTodo) toggleTodo(id);
+          }}
+          editTodo={() => {
+            setFocusedItem(null);
+            if (title !== focusedItemTitle && editTodo) {
+              editTodo(id, focusedItemTitle);
+            }
+            setFocusedItemTitle(null);
+          }}
+          onChangeTodoInput={newValue => setFocusedItemTitle(newValue)}
         />
       ))}
     </div>
@@ -35,6 +54,7 @@ TodoList.propTypes = {
   todos: PropTypes.array.isRequired,
   deleteTodo: PropTypes.func,
   toggleTodo: PropTypes.func,
+  editTodo: PropTypes.func,
 };
 
 export default memo(TodoList);
