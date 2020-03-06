@@ -152,7 +152,7 @@ describe('<TodoItem />', () => {
       />,
     );
 
-    fireEvent.keyDown(firstChild, { key: 'Enter', code: 13, which: 13 });
+    fireEvent.keyDown(firstChild, { key: 'Enter', keyCode: 13 });
     expect(editTodoMock).not.toHaveBeenCalled();
   });
 

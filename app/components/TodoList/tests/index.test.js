@@ -144,6 +144,78 @@ describe('<TodoList />', () => {
     expect(toggleTodoHookMock).toHaveBeenCalledWith(2);
   });
 
+  it('Should call the edit hook with the appropiate ID and new value when a todo is clicked, edited and then pressed enter', () => {
+    const editTodoHookMock = jest.fn();
+    const newValue = 'New value for todo';
+
+    const todos = [
+      {
+        id: 1,
+        title: 'A todo',
+        done: false,
+      },
+      {
+        id: 2,
+        title: 'A todo 2',
+        done: false,
+      },
+      {
+        id: 3,
+        title: 'A todo 3',
+        done: false,
+      },
+    ];
+
+    const { getByTestId } = render(
+      <TodoList todos={todos} editTodo={editTodoHookMock} />,
+    );
+
+    fireEvent.click(getByTestId('todo-2'));
+    fireEvent.change(getByTestId('editInput-2'), {
+      target: { value: newValue },
+    });
+    fireEvent.keyDown(getByTestId('editInput-2'), {
+      key: 'Enter',
+      keyCode: 13,
+    });
+
+    expect(editTodoHookMock).toHaveBeenCalledWith(2, newValue);
+  });
+
+  it('Should not call the edit hook when a todo is clicked and pressed enter without editing', () => {
+    const editTodoHookMock = jest.fn();
+
+    const todos = [
+      {
+        id: 1,
+        title: 'A todo',
+        done: false,
+      },
+      {
+        id: 2,
+        title: 'A todo 2',
+        done: false,
+      },
+      {
+        id: 3,
+        title: 'A todo 3',
+        done: false,
+      },
+    ];
+
+    const { getByTestId } = render(
+      <TodoList todos={todos} editTodo={editTodoHookMock} />,
+    );
+
+    fireEvent.click(getByTestId('todo-2'));
+    fireEvent.keyDown(getByTestId('editInput-2'), {
+      key: 'Enter',
+      keyCode: 13,
+    });
+
+    expect(editTodoHookMock).not.toHaveBeenCalled();
+  });
+
   it('Should render and match the snapshot on empty todos', () => {
     const {
       container: { firstChild },
