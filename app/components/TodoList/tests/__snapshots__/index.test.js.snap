@@ -2,6 +2,156 @@
 
 exports[`<TodoList /> Should render and match the snapshot on empty todos 1`] = `<div />`;
 
-exports[`<TodoList /> Should render and match the snapshot with 3 todos 1`] = `<div />`;
+exports[`<TodoList /> Should render and match the snapshot with 3 todos 1`] = `
+<div>
+  <div
+    id="todo-1"
+  >
+    <button
+      data-testid="todo-1"
+      type="button"
+    >
+      A todo
+    </button>
+    <button
+      data-testid="toggle-1"
+      src="/false"
+      type="button"
+    />
+    <button
+      data-testid="delete-1"
+      src="/false"
+      type="button"
+    />
+  </div>
+  <div
+    id="todo-2"
+  >
+    <button
+      data-testid="todo-2"
+      type="button"
+    >
+      Another todo
+    </button>
+    <button
+      data-testid="toggle-2"
+      src="/true"
+      type="button"
+    />
+    <button
+      data-testid="delete-2"
+      src="/false"
+      type="button"
+    />
+  </div>
+  <div
+    id="todo-3"
+  >
+    <button
+      data-testid="todo-3"
+      type="button"
+    >
+      Last todo
+    </button>
+    <button
+      data-testid="toggle-3"
+      src="/false"
+      type="button"
+    />
+    <button
+      data-testid="delete-3"
+      src="/false"
+      type="button"
+    />
+  </div>
+</div>
+`;
 
-exports[`<TodoList /> Should render and match the snapshot with one todo 1`] = `<div />`;
+exports[`<TodoList /> Should render and match the snapshot with 3 todos after clicking one of them 1`] = `
+<div>
+  <div
+    id="todo-1"
+  >
+    <button
+      data-testid="todo-1"
+      type="button"
+    >
+      A todo
+    </button>
+    <button
+      data-testid="toggle-1"
+      src="/false"
+      type="button"
+    />
+    <button
+      data-testid="delete-1"
+      src="/false"
+      type="button"
+    />
+  </div>
+  <div
+    id="todo-2"
+  >
+    <button
+      data-testid="todo-2"
+      type="button"
+    >
+      Another todo
+    </button>
+    <button
+      data-testid="toggle-2"
+      src="/true"
+      type="button"
+    />
+    <button
+      data-testid="delete-2"
+      src="/false"
+      type="button"
+    />
+  </div>
+  <div
+    id="todo-3"
+  >
+    <input
+      data-testid="editInput-3"
+      type="text"
+      value="Last todo"
+    />
+    <button
+      data-testid="toggle-3"
+      src="/false"
+      type="button"
+    />
+    <button
+      data-testid="delete-3"
+      src="/true"
+      type="button"
+    />
+  </div>
+</div>
+`;
+
+exports[`<TodoList /> Should render and match the snapshot with one todo 1`] = `
+<div>
+  <div
+    id="todo-1"
+  >
+    <button
+      data-testid="todo-1"
+      type="button"
+    >
+      A todo
+    </button>
+    <button
+      data-testid="toggle-1"
+      src="/false"
+      type="button"
+    />
+    <button
+      data-testid="delete-1"
+      src="/false"
+      type="button"
+    />
+  </div>
+</div>
+`;
