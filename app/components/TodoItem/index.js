@@ -48,6 +48,7 @@ function TodoItem({
             if (focusTodo) focusTodo();
           }}
           onKeyDown={emptyHandler}
+          data-testid={`todo-${id}`}
           type="button"
         >
           {title}

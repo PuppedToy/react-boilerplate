@@ -54,7 +54,7 @@ describe('<TodoItem />', () => {
   it('Should call focus hook when clicked on the text', () => {
     const focusTodoMock = jest.fn();
     const title = 'One item';
-    const { getByText } = render(
+    const { getByTestId } = render(
       <TodoItem
         title={title}
         id={1}
@@ -64,7 +64,7 @@ describe('<TodoItem />', () => {
       />,
     );
 
-    fireEvent.click(getByText(title));
+    fireEvent.click(getByTestId('todo-1'));
     expect(focusTodoMock).toHaveBeenCalled();
   });
 

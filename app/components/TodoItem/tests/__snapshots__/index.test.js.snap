@@ -5,6 +5,7 @@ exports[`<TodoItem /> Should render and match the snapshot 1`] = `
   id="todo-1"
 >
   <button
+    data-testid="todo-1"
     type="button"
   >
     One item
