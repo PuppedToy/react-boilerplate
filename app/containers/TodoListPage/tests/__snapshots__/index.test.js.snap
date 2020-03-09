@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<TodoListPage /> Should render and match the snapshot 1`] = `
+exports[`<TodoListPage /> Unit testing with mocked Apollo server Should render and match the snapshot 1`] = `
 <div>
   <h1
     class="H1-tncdg6-0 hpAKSC"
@@ -9,5 +9,67 @@ exports[`<TodoListPage /> Should render and match the snapshot 1`] = `
       To do List
     </span>
   </h1>
+  <div>
+    <div
+      id="todo-1"
+    >
+      <button
+        data-testid="todo-1"
+        type="button"
+      >
+        Item 1
+      </button>
+      <button
+        data-testid="toggle-1"
+        src="/false"
+        type="button"
+      />
+      <button
+        data-testid="delete-1"
+        src="/false"
+        type="button"
+      />
+    </div>
+    <div
+      id="todo-2"
+    >
+      <button
+        data-testid="todo-2"
+        type="button"
+      >
+        Item 2
+      </button>
+      <button
+        data-testid="toggle-2"
+        src="/true"
+        type="button"
+      />
+      <button
+        data-testid="delete-2"
+        src="/false"
+        type="button"
+      />
+    </div>
+    <div
+      id="todo-3"
+    >
+      <button
+        data-testid="todo-3"
+        type="button"
+      >
+        Item 3
+      </button>
+      <button
+        data-testid="toggle-3"
+        src="/false"
+        type="button"
+      />
+      <button
+        data-testid="delete-3"
+        src="/false"
+        type="button"
+      />
+    </div>
+  </div>
 </div>
 `;
