@@ -38,6 +38,12 @@ export function TodoListPage() {
   const [toggleTodo] = useMutationWithRefetch(TOGGLE_TODO_MUTATION, refetch);
   const [editTodo] = useMutationWithRefetch(EDIT_TODO_MUTATION, refetch);
   const [addTodo] = useMutationWithRefetch(ADD_TODO_MUTATION, refetch);
+  const addTodoHandler = () => {
+    if (newTodoTitle !== '') {
+      addTodo({ variables: { title: newTodoTitle } });
+      setNewTodoTitle('');
+    }
+  };
 
   return (
     <div>
@@ -68,11 +74,14 @@ export function TodoListPage() {
                 if (target && Object.hasOwnProperty.call(target, 'value'))
                   setNewTodoTitle(target.value);
               }}
+              onKeyDown={({ code, which }) => {
+                if (code === 13 || which === 13) addTodoHandler();
+              }}
             />
             <button
               type="button"
               data-testid="add-todo-button"
-              onClick={() => addTodo({ variables: { title: newTodoTitle } })}
+              onClick={addTodoHandler}
             >
               <FormattedMessage {...messages.add} />
             </button>
