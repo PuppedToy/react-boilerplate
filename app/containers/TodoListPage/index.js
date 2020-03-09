@@ -7,16 +7,21 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { FormattedMessage } from 'react-intl';
-import { useQuery } from 'react-apollo';
+import { useQuery, useMutation } from 'react-apollo';
 
 import TodoList from 'components/TodoList';
 import H1 from 'components/H1';
 import LoadingIndicator from 'components/LoadingIndicator';
 import messages from './messages';
-import { GET_TODOS_QUERY } from './queries';
+import { GET_TODOS_QUERY, DELETE_TODO_MUTATION } from './queries';
 
 export function TodoListPage() {
-  const { loading, data, error } = useQuery(GET_TODOS_QUERY);
+  const { loading, data, error, refetch } = useQuery(GET_TODOS_QUERY);
+  const [deleteTodo] = useMutation(DELETE_TODO_MUTATION, {
+    onCompleted: () => {
+      refetch();
+    },
+  });
 
   return (
     <div>
@@ -31,7 +36,10 @@ export function TodoListPage() {
       {loading || error ? (
         <LoadingIndicator />
       ) : (
-        <TodoList todos={data.getTodoList} />
+        <TodoList
+          todos={data.getTodoList}
+          deleteTodo={id => deleteTodo({ variables: { id } })}
+        />
       )}
     </div>
   );

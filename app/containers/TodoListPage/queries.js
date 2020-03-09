@@ -10,7 +10,7 @@ export const GET_TODOS_QUERY = gql`
   }
 `;
 
-export const ADD_TODO_QUERY = gql`
+export const ADD_TODO_MUTATION = gql`
   mutation addTodo($title: String!) {
     addTodo(title: $title) {
       id
@@ -20,7 +20,7 @@ export const ADD_TODO_QUERY = gql`
   }
 `;
 
-export const DELETE_TODO_QUERY = gql`
+export const DELETE_TODO_MUTATION = gql`
   mutation deleteTodo($id: Int!) {
     deleteTodo(id: $id) {
       id
@@ -30,7 +30,7 @@ export const DELETE_TODO_QUERY = gql`
   }
 `;
 
-export const TOGGLE_TODO_QUERY = gql`
+export const TOGGLE_TODO_MUTATION = gql`
   mutation toggleTodo($id: Int!) {
     toggleTodo(id: $id) {
       id
@@ -40,7 +40,7 @@ export const TOGGLE_TODO_QUERY = gql`
   }
 `;
 
-export const EDIT_TODO_QUERY = gql`
+export const EDIT_TODO_MUTATION = gql`
   mutation toggleTodo($id: Int!, $title: String!) {
     toggleTodo(id: $id, title: $title) {
       id

@@ -7,78 +7,90 @@
  */
 
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import {
+  render,
+  fireEvent,
+  waitForElementToBeRemoved,
+  wait,
+} from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
 import { MockedProvider } from '@apollo/react-testing';
-import wait from 'waait';
 
 import { TodoListPage } from '../index';
 import { DEFAULT_LOCALE } from '../../../i18n';
 
 import {
   GET_TODOS_QUERY,
-  // ADD_TODO_QUERY,
-  // DELETE_TODO_QUERY,
-  // TOGGLE_TODO_QUERY,
-  // EDIT_TODO_QUERY,
+  DELETE_TODO_MUTATION,
+  // ADD_TODO_MUTATION,
+  // TOGGLE_TODO_MUTATION,
+  // EDIT_TODO_MUTATION,
 } from '../queries';
 
-const STATE_CLEAN = 0;
-const STATE_DELETED = 1;
-let testState = STATE_CLEAN;
-
-const basicMocks = [
-  {
-    request: {
-      query: GET_TODOS_QUERY,
-    },
-    result: () => {
-      switch (testState) {
-        case STATE_CLEAN:
-          return {
-            data: {
-              getTodoList: [
-                {
-                  id: 1,
-                  title: 'Item 1',
-                  done: false,
-                },
-                {
-                  id: 2,
-                  title: 'Item 2',
-                  done: true,
-                },
-                {
-                  id: 3,
-                  title: 'Item 3',
-                  done: false,
-                },
-              ],
-            },
-          };
-        case STATE_DELETED:
-          return {
-            data: {
-              getTodoList: [
-                {
-                  id: 1,
-                  title: 'Item 1',
-                  done: false,
-                },
-                {
-                  id: 3,
-                  title: 'Item 3',
-                  done: false,
-                },
-              ],
-            },
-          };
-        default:
-          return {};
-      }
+const getTodosFirstFetchMockCall = {
+  request: {
+    query: GET_TODOS_QUERY,
+  },
+  result: {
+    data: {
+      getTodoList: [
+        {
+          id: 1,
+          title: 'Item 1',
+          done: false,
+        },
+        {
+          id: 2,
+          title: 'Item 2',
+          done: true,
+        },
+        {
+          id: 3,
+          title: 'Item 3',
+          done: false,
+        },
+      ],
     },
   },
-];
+};
+
+const getTodosAfterDeleteMockCall = {
+  request: {
+    query: GET_TODOS_QUERY,
+  },
+  result: {
+    data: {
+      getTodoList: [
+        {
+          id: 1,
+          title: 'Item 1',
+          done: false,
+        },
+        {
+          id: 3,
+          title: 'Item 3',
+          done: false,
+        },
+      ],
+    },
+  },
+};
+
+const deleteTodoMockCall = {
+  request: {
+    query: DELETE_TODO_MUTATION,
+    variables: { id: 2 },
+  },
+  result: {
+    data: {
+      deleteTodo: {
+        id: 2,
+        title: 'Item 2',
+        done: true,
+      },
+    },
+  },
+};
 
 describe('<TodoListPage />', () => {
   it('Expect to not log errors in console', () => {
@@ -86,7 +98,10 @@ describe('<TodoListPage />', () => {
 
     render(
       <IntlProvider locale={DEFAULT_LOCALE}>
-        <MockedProvider mocks={basicMocks} addTypename={false}>
+        <MockedProvider
+          mocks={[getTodosFirstFetchMockCall]}
+          addTypename={false}
+        >
           <TodoListPage />
         </MockedProvider>
       </IntlProvider>,
@@ -95,37 +110,41 @@ describe('<TodoListPage />', () => {
   });
 
   describe('Unit testing with mocked Apollo server', () => {
-    beforeEach(() => {
-      testState = STATE_CLEAN;
-    });
-
     it('Expect to load todos', async () => {
       const { queryAllByRole } = render(
         <IntlProvider locale={DEFAULT_LOCALE}>
-          <MockedProvider mocks={basicMocks} addTypename={false}>
+          <MockedProvider
+            mocks={[getTodosFirstFetchMockCall]}
+            addTypename={false}
+          >
             <TodoListPage />
           </MockedProvider>
         </IntlProvider>,
       );
-      await wait(0);
+      await wait();
 
       expect(queryAllByRole('button').length).toBe(9);
     });
 
     it('Expect to successfully delete a todo after clicking the delete button', async () => {
-      const { getByTestId, queryByTestId, queryAllByRole } = render(
+      const mocks = [
+        getTodosFirstFetchMockCall,
+        deleteTodoMockCall,
+        getTodosAfterDeleteMockCall,
+      ];
+      const { getByTestId, queryAllByRole } = render(
         <IntlProvider locale={DEFAULT_LOCALE}>
-          <MockedProvider mocks={basicMocks} addTypename={false}>
+          <MockedProvider mocks={mocks} addTypename={false}>
             <TodoListPage />
           </MockedProvider>
         </IntlProvider>,
       );
-      await wait(0);
+      await wait();
 
-      fireEvent.click(getByTestId('delete-2'));
-      await wait(0);
+      await fireEvent.click(getByTestId('delete-2'));
 
-      expect(queryByTestId('todo-2')).toBe(null);
+      await waitForElementToBeRemoved(() => getByTestId('todo-2'));
+
       expect(queryAllByRole('button').length).toBe(6);
     });
 
@@ -134,12 +153,15 @@ describe('<TodoListPage />', () => {
         container: { firstChild },
       } = render(
         <IntlProvider locale={DEFAULT_LOCALE}>
-          <MockedProvider mocks={basicMocks} addTypename={false}>
+          <MockedProvider
+            mocks={[getTodosFirstFetchMockCall]}
+            addTypename={false}
+          >
             <TodoListPage />
           </MockedProvider>
         </IntlProvider>,
       );
-      await wait(0);
+      await wait();
 
       expect(firstChild).toMatchSnapshot();
     });
