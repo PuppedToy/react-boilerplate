@@ -26,7 +26,7 @@ import {
   DELETE_TODO_MUTATION,
   TOGGLE_TODO_MUTATION,
   EDIT_TODO_MUTATION,
-  // ADD_TODO_MUTATION,
+  ADD_TODO_MUTATION,
 } from '../queries';
 
 const getTodosFirstFetchMockCall = {
@@ -144,7 +144,7 @@ const editTodoMockCall = {
   },
   result: {
     data: {
-      toggleTodo: {
+      editTodo: {
         id: 2,
         title: 'Edited Item 2',
         done: false,
@@ -173,6 +173,70 @@ const getTodosAfterEditMockCall = {
         {
           id: 3,
           title: 'Item 3',
+          done: false,
+        },
+      ],
+    },
+  },
+};
+
+const addTodoMockCall = {
+  request: {
+    query: ADD_TODO_MUTATION,
+    variables: { title: 'New item' },
+  },
+  result: {
+    data: {
+      addTodo: {
+        id: 4,
+        title: 'New item',
+        done: false,
+      },
+    },
+  },
+};
+
+const addEmptyTodoMockCall = {
+  request: {
+    query: ADD_TODO_MUTATION,
+    variables: { title: '' },
+  },
+  result: {
+    data: {
+      addTodo: {
+        id: 4,
+        title: '',
+        done: false,
+      },
+    },
+  },
+};
+
+const getTodosAfterAddMockCall = {
+  request: {
+    query: GET_TODOS_QUERY,
+  },
+  result: {
+    data: {
+      getTodoList: [
+        {
+          id: 1,
+          title: 'Item 1',
+          done: false,
+        },
+        {
+          id: 2,
+          title: 'Edited Item 2',
+          done: true,
+        },
+        {
+          id: 3,
+          title: 'Item 3',
+          done: false,
+        },
+        {
+          id: 4,
+          title: 'New item',
           done: false,
         },
       ],
@@ -211,7 +275,7 @@ describe('<TodoListPage />', () => {
       );
       await wait();
 
-      expect(queryAllByRole('button').length).toBe(9);
+      expect(queryAllByRole('button').length).toBe(10);
     });
 
     it('Expect to successfully delete a todo after clicking the delete button', async () => {
@@ -233,7 +297,7 @@ describe('<TodoListPage />', () => {
 
       await waitForElementToBeRemoved(() => getByTestId('todo-2'));
 
-      expect(queryAllByRole('button').length).toBe(6);
+      expect(queryAllByRole('button').length).toBe(7);
     });
 
     it('Expect to successfully toggle a todo after clicking the toggle button', async () => {
@@ -261,7 +325,7 @@ describe('<TodoListPage />', () => {
     });
 
     it('Expect to successfully click an item and edit it', async () => {
-      const newValue = editTodoMockCall.result.data.toggleTodo.title;
+      const newValue = editTodoMockCall.result.data.editTodo.title;
       const mocks = [
         getTodosFirstFetchMockCall,
         editTodoMockCall,
@@ -290,6 +354,104 @@ describe('<TodoListPage />', () => {
       });
 
       await waitForElement(() => getByTestId('todo-2') && getByText(newValue));
+    });
+
+    it('Expect to successfully add a new todo', async () => {
+      const newValue = addTodoMockCall.request.variables.title;
+      const mocks = [
+        getTodosFirstFetchMockCall,
+        addTodoMockCall,
+        getTodosAfterAddMockCall,
+      ];
+      const { getByTestId } = render(
+        <IntlProvider locale={DEFAULT_LOCALE}>
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <TodoListPage />
+          </MockedProvider>
+        </IntlProvider>,
+      );
+      await wait();
+
+      await fireEvent.change(getByTestId('add-todo-input'), {
+        target: { value: newValue },
+      });
+      await fireEvent.click(getByTestId('add-todo-button'));
+
+      const newTodo = await waitForElement(() => getByTestId('todo-4'));
+      expect(newTodo).toHaveTextContent(newValue);
+    });
+
+    it('Expect to empty add todo input when added', async () => {
+      const newValue = addTodoMockCall.request.variables.title;
+      const mocks = [
+        getTodosFirstFetchMockCall,
+        addTodoMockCall,
+        getTodosAfterAddMockCall,
+      ];
+      const { getByTestId } = render(
+        <IntlProvider locale={DEFAULT_LOCALE}>
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <TodoListPage />
+          </MockedProvider>
+        </IntlProvider>,
+      );
+      await wait();
+
+      await fireEvent.change(getByTestId('add-todo-input'), {
+        target: { value: newValue },
+      });
+      await fireEvent.click(getByTestId('add-todo-button'));
+
+      expect(getByTestId('add-todo-input')).toHaveValue('');
+    });
+
+    it('Expect to add todo after hitting enter', async () => {
+      const newValue = addTodoMockCall.request.variables.title;
+      const mocks = [
+        getTodosFirstFetchMockCall,
+        addTodoMockCall,
+        getTodosAfterAddMockCall,
+      ];
+      const { getByTestId } = render(
+        <IntlProvider locale={DEFAULT_LOCALE}>
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <TodoListPage />
+          </MockedProvider>
+        </IntlProvider>,
+      );
+      await wait();
+
+      await fireEvent.change(getByTestId('add-todo-input'), {
+        target: { value: newValue },
+      });
+      await fireEvent.keyDown(getByTestId('add-todo-input'), {
+        key: 'Enter',
+        keyCode: 13,
+      });
+
+      const newTodo = await waitForElement(() => getByTestId('todo-4'));
+      expect(newTodo).toHaveTextContent(newValue);
+    });
+
+    it('Expect to not add a todo if input is blank', async () => {
+      const mocks = [
+        getTodosFirstFetchMockCall,
+        addEmptyTodoMockCall,
+        getTodosAfterAddMockCall,
+      ];
+      const { getByTestId, queryByTestId } = render(
+        <IntlProvider locale={DEFAULT_LOCALE}>
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <TodoListPage />
+          </MockedProvider>
+        </IntlProvider>,
+      );
+      await wait();
+
+      await fireEvent.click(getByTestId('add-todo-button'));
+
+      await wait(() => {}, { timeout: 200 });
+      expect(queryByTestId('todo-4')).toBe(null);
     });
 
     it('Should render and match the snapshot', async () => {
