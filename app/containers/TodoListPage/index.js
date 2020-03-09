@@ -4,7 +4,7 @@
  *
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { FormattedMessage } from 'react-intl';
 import { useQuery, useMutation } from 'react-apollo';
@@ -18,6 +18,7 @@ import {
   DELETE_TODO_MUTATION,
   TOGGLE_TODO_MUTATION,
   EDIT_TODO_MUTATION,
+  ADD_TODO_MUTATION,
 } from './queries';
 
 function useMutationWithRefetch(query, refetch, otherOptions = {}) {
@@ -30,10 +31,13 @@ function useMutationWithRefetch(query, refetch, otherOptions = {}) {
 }
 
 export function TodoListPage() {
+  const [newTodoTitle, setNewTodoTitle] = useState('');
+
   const { loading, data, error, refetch } = useQuery(GET_TODOS_QUERY);
   const [deleteTodo] = useMutationWithRefetch(DELETE_TODO_MUTATION, refetch);
   const [toggleTodo] = useMutationWithRefetch(TOGGLE_TODO_MUTATION, refetch);
   const [editTodo] = useMutationWithRefetch(EDIT_TODO_MUTATION, refetch);
+  const [addTodo] = useMutationWithRefetch(ADD_TODO_MUTATION, refetch);
 
   return (
     <div>
@@ -48,12 +52,32 @@ export function TodoListPage() {
       {loading || error ? (
         <LoadingIndicator />
       ) : (
-        <TodoList
-          todos={data.getTodoList}
-          deleteTodo={id => deleteTodo({ variables: { id } })}
-          toggleTodo={id => toggleTodo({ variables: { id } })}
-          editTodo={(id, title) => editTodo({ variables: { id, title } })}
-        />
+        <div>
+          <TodoList
+            todos={data.getTodoList}
+            deleteTodo={id => deleteTodo({ variables: { id } })}
+            toggleTodo={id => toggleTodo({ variables: { id } })}
+            editTodo={(id, title) => editTodo({ variables: { id, title } })}
+          />
+          <div>
+            <input
+              data-testid="add-todo-input"
+              type="text"
+              value={newTodoTitle}
+              onChange={({ target }) => {
+                if (target && Object.hasOwnProperty.call(target, 'value'))
+                  setNewTodoTitle(target.value);
+              }}
+            />
+            <button
+              type="button"
+              data-testid="add-todo-button"
+              onClick={() => addTodo({ variables: { title: newTodoTitle } })}
+            >
+              <FormattedMessage {...messages.add} />
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -13,4 +13,8 @@ export default defineMessages({
     id: `${scope}.header`,
     defaultMessage: 'To do List',
   },
+  add: {
+    id: `${scope}.add`,
+    defaultMessage: 'Add',
+  },
 });
