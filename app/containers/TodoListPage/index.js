@@ -13,11 +13,20 @@ import TodoList from 'components/TodoList';
 import H1 from 'components/H1';
 import LoadingIndicator from 'components/LoadingIndicator';
 import messages from './messages';
-import { GET_TODOS_QUERY, DELETE_TODO_MUTATION } from './queries';
+import {
+  GET_TODOS_QUERY,
+  DELETE_TODO_MUTATION,
+  TOGGLE_TODO_MUTATION,
+} from './queries';
 
 export function TodoListPage() {
   const { loading, data, error, refetch } = useQuery(GET_TODOS_QUERY);
   const [deleteTodo] = useMutation(DELETE_TODO_MUTATION, {
+    onCompleted: () => {
+      refetch();
+    },
+  });
+  const [toggleTodo] = useMutation(TOGGLE_TODO_MUTATION, {
     onCompleted: () => {
       refetch();
     },
@@ -39,6 +48,7 @@ export function TodoListPage() {
         <TodoList
           todos={data.getTodoList}
           deleteTodo={id => deleteTodo({ variables: { id } })}
+          toggleTodo={id => toggleTodo({ variables: { id } })}
         />
       )}
     </div>
