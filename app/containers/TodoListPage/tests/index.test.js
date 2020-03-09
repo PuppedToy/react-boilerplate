@@ -10,9 +10,11 @@ import React from 'react';
 import {
   render,
   fireEvent,
-  waitForElementToBeRemoved,
   wait,
+  waitForElement,
+  waitForElementToBeRemoved,
 } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
 import { IntlProvider } from 'react-intl';
 import { MockedProvider } from '@apollo/react-testing';
 
@@ -23,8 +25,8 @@ import {
   GET_TODOS_QUERY,
   DELETE_TODO_MUTATION,
   TOGGLE_TODO_MUTATION,
+  EDIT_TODO_MUTATION,
   // ADD_TODO_MUTATION,
-  // EDIT_TODO_MUTATION,
 } from '../queries';
 
 const getTodosFirstFetchMockCall = {
@@ -135,6 +137,49 @@ const getTodosAfterToggleMockCall = {
   },
 };
 
+const editTodoMockCall = {
+  request: {
+    query: EDIT_TODO_MUTATION,
+    variables: { id: 2, title: 'Edited Item 2' },
+  },
+  result: {
+    data: {
+      toggleTodo: {
+        id: 1,
+        title: 'Edited Item 2',
+        done: true,
+      },
+    },
+  },
+};
+
+const getTodosAfterEditMockCall = {
+  request: {
+    query: EDIT_TODO_MUTATION,
+  },
+  result: {
+    data: {
+      getTodoList: [
+        {
+          id: 1,
+          title: 'Item 1',
+          done: true,
+        },
+        {
+          id: 2,
+          title: 'Edited Item 2',
+          done: true,
+        },
+        {
+          id: 3,
+          title: 'Item 3',
+          done: false,
+        },
+      ],
+    },
+  },
+};
+
 describe('<TodoListPage />', () => {
   it('Expect to not log errors in console', () => {
     const spy = jest.spyOn(global.console, 'error');
@@ -213,6 +258,40 @@ describe('<TodoListPage />', () => {
         const element = getByTestId('toggle-1');
         if (element.getAttribute('src') === '/false') throw new Error();
       });
+    });
+
+    it('Expect to successfully click an item and edit it', async () => {
+      const newValue = editTodoMockCall.result.data.toggleTodo.title;
+      const mocks = [
+        getTodosFirstFetchMockCall,
+        editTodoMockCall,
+        getTodosAfterEditMockCall,
+      ];
+      const { getByTestId } = render(
+        <IntlProvider locale={DEFAULT_LOCALE}>
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <TodoListPage />
+          </MockedProvider>
+        </IntlProvider>,
+      );
+      await wait();
+
+      await fireEvent.click(getByTestId('todo-2'));
+
+      await waitForElement(() => getByTestId('editInput-2'));
+
+      await fireEvent.change(getByTestId('editInput-2'), {
+        target: { value: newValue },
+      });
+
+      await fireEvent.keyDown(getByTestId('editInput-2'), {
+        key: 'Enter',
+        keyCode: 13,
+      });
+
+      const todoElement = await waitForElement(() => getByTestId('todo-2'));
+
+      expect(todoElement).toHaveTextContent(newValue);
     });
 
     it('Should render and match the snapshot', async () => {
