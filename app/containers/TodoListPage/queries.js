@@ -41,8 +41,8 @@ export const TOGGLE_TODO_MUTATION = gql`
 `;
 
 export const EDIT_TODO_MUTATION = gql`
-  mutation toggleTodo($id: Int!, $title: String!) {
-    toggleTodo(id: $id, title: $title) {
+  mutation editTodo($id: Int!, $title: String!) {
+    editTodo(id: $id, title: $title) {
       id
       title
       done

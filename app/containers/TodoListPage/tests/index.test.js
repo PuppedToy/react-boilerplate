@@ -145,9 +145,9 @@ const editTodoMockCall = {
   result: {
     data: {
       toggleTodo: {
-        id: 1,
+        id: 2,
         title: 'Edited Item 2',
-        done: true,
+        done: false,
       },
     },
   },
@@ -155,7 +155,7 @@ const editTodoMockCall = {
 
 const getTodosAfterEditMockCall = {
   request: {
-    query: EDIT_TODO_MUTATION,
+    query: GET_TODOS_QUERY,
   },
   result: {
     data: {
@@ -163,7 +163,7 @@ const getTodosAfterEditMockCall = {
         {
           id: 1,
           title: 'Item 1',
-          done: true,
+          done: false,
         },
         {
           id: 2,
@@ -267,7 +267,7 @@ describe('<TodoListPage />', () => {
         editTodoMockCall,
         getTodosAfterEditMockCall,
       ];
-      const { getByTestId } = render(
+      const { getByTestId, getByText } = render(
         <IntlProvider locale={DEFAULT_LOCALE}>
           <MockedProvider mocks={mocks} addTypename={false}>
             <TodoListPage />
@@ -289,9 +289,7 @@ describe('<TodoListPage />', () => {
         keyCode: 13,
       });
 
-      const todoElement = await waitForElement(() => getByTestId('todo-2'));
-
-      expect(todoElement).toHaveTextContent(newValue);
+      await waitForElement(() => getByTestId('todo-2') && getByText(newValue));
     });
 
     it('Should render and match the snapshot', async () => {

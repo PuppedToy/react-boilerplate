@@ -17,20 +17,23 @@ import {
   GET_TODOS_QUERY,
   DELETE_TODO_MUTATION,
   TOGGLE_TODO_MUTATION,
+  EDIT_TODO_MUTATION,
 } from './queries';
+
+function useMutationWithRefetch(query, refetch, otherOptions = {}) {
+  return useMutation(query, {
+    ...otherOptions,
+    onCompleted: () => {
+      refetch();
+    },
+  });
+}
 
 export function TodoListPage() {
   const { loading, data, error, refetch } = useQuery(GET_TODOS_QUERY);
-  const [deleteTodo] = useMutation(DELETE_TODO_MUTATION, {
-    onCompleted: () => {
-      refetch();
-    },
-  });
-  const [toggleTodo] = useMutation(TOGGLE_TODO_MUTATION, {
-    onCompleted: () => {
-      refetch();
-    },
-  });
+  const [deleteTodo] = useMutationWithRefetch(DELETE_TODO_MUTATION, refetch);
+  const [toggleTodo] = useMutationWithRefetch(TOGGLE_TODO_MUTATION, refetch);
+  const [editTodo] = useMutationWithRefetch(EDIT_TODO_MUTATION, refetch);
 
   return (
     <div>
@@ -49,6 +52,7 @@ export function TodoListPage() {
           todos={data.getTodoList}
           deleteTodo={id => deleteTodo({ variables: { id } })}
           toggleTodo={id => toggleTodo({ variables: { id } })}
+          editTodo={(id, title) => editTodo({ variables: { id, title } })}
         />
       )}
     </div>

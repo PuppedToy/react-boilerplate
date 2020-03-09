@@ -28,7 +28,10 @@ import '!file-loader?name=[name].[ext]!./images/favicon.ico';
 import 'file-loader?name=.htaccess!./.htaccess'; // eslint-disable-line import/extensions
 
 import { ApolloProvider } from 'react-apollo';
-import { ApolloClient, InMemoryCache, createHttpLink } from 'apollo-boost';
+import { ApolloClient } from 'apollo-client';
+import { createHttpLink } from 'apollo-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+
 import configureStore from './configureStore';
 
 // Import i18n messages
