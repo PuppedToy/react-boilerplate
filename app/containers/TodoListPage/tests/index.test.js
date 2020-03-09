@@ -22,8 +22,8 @@ import { DEFAULT_LOCALE } from '../../../i18n';
 import {
   GET_TODOS_QUERY,
   DELETE_TODO_MUTATION,
+  TOGGLE_TODO_MUTATION,
   // ADD_TODO_MUTATION,
-  // TOGGLE_TODO_MUTATION,
   // EDIT_TODO_MUTATION,
 } from '../queries';
 
@@ -92,6 +92,49 @@ const deleteTodoMockCall = {
   },
 };
 
+const toggleTodoMockCall = {
+  request: {
+    query: TOGGLE_TODO_MUTATION,
+    variables: { id: 1 },
+  },
+  result: {
+    data: {
+      toggleTodo: {
+        id: 1,
+        title: 'Item 1',
+        done: true,
+      },
+    },
+  },
+};
+
+const getTodosAfterToggleMockCall = {
+  request: {
+    query: GET_TODOS_QUERY,
+  },
+  result: {
+    data: {
+      getTodoList: [
+        {
+          id: 1,
+          title: 'Item 1',
+          done: true,
+        },
+        {
+          id: 2,
+          title: 'Item 2',
+          done: true,
+        },
+        {
+          id: 3,
+          title: 'Item 3',
+          done: false,
+        },
+      ],
+    },
+  },
+};
+
 describe('<TodoListPage />', () => {
   it('Expect to not log errors in console', () => {
     const spy = jest.spyOn(global.console, 'error');
@@ -146,6 +189,30 @@ describe('<TodoListPage />', () => {
       await waitForElementToBeRemoved(() => getByTestId('todo-2'));
 
       expect(queryAllByRole('button').length).toBe(6);
+    });
+
+    it('Expect to successfully toggle a todo after clicking the toggle button', async () => {
+      const mocks = [
+        getTodosFirstFetchMockCall,
+        toggleTodoMockCall,
+        getTodosAfterToggleMockCall,
+      ];
+      const { getByTestId } = render(
+        <IntlProvider locale={DEFAULT_LOCALE}>
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <TodoListPage />
+          </MockedProvider>
+        </IntlProvider>,
+      );
+      await wait();
+
+      await fireEvent.click(getByTestId('toggle-1'));
+
+      // Fail if src attribute does not change after toggling
+      await wait(() => {
+        const element = getByTestId('toggle-1');
+        if (element.getAttribute('src') === '/false') throw new Error();
+      });
     });
 
     it('Should render and match the snapshot', async () => {
