@@ -27,10 +27,17 @@ import LanguageProvider from 'containers/LanguageProvider';
 import '!file-loader?name=[name].[ext]!./images/favicon.ico';
 import 'file-loader?name=.htaccess!./.htaccess'; // eslint-disable-line import/extensions
 
+import { ApolloProvider } from 'react-apollo';
+import { ApolloClient } from 'apollo-client';
+import { createHttpLink } from 'apollo-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+
 import configureStore from './configureStore';
 
 // Import i18n messages
 import { translationMessages } from './i18n';
+
+// Apollo and GraphQL
 
 // Observe loading of Open Sans (to remove open sans, remove the <link> tag in
 // the index.html file and this observer)
@@ -41,6 +48,15 @@ openSansObserver.load().then(() => {
   document.body.classList.add('fontLoaded');
 });
 
+const httpLink = createHttpLink({
+  uri: 'http://localhost:3000/graphql',
+});
+
+const client = new ApolloClient({
+  link: httpLink,
+  cache: new InMemoryCache(),
+});
+
 // Create redux store with history
 const initialState = {};
 const store = configureStore(initialState, history);
@@ -49,11 +65,13 @@ const MOUNT_NODE = document.getElementById('app');
 const render = messages => {
   ReactDOM.render(
     <Provider store={store}>
-      <LanguageProvider messages={messages}>
-        <ConnectedRouter history={history}>
-          <App />
-        </ConnectedRouter>
-      </LanguageProvider>
+      <ApolloProvider client={client}>
+        <LanguageProvider messages={messages}>
+          <ConnectedRouter history={history}>
+            <App />
+          </ConnectedRouter>
+        </LanguageProvider>
+      </ApolloProvider>
     </Provider>,
     MOUNT_NODE,
   );
