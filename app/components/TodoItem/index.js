@@ -7,6 +7,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Checkbox from './Checkbox';
+
 function TodoItem({
   id,
   title,
@@ -54,14 +56,15 @@ function TodoItem({
           {title}
         </button>
       )}
-      <button
+      <Checkbox
         data-testid={`toggle-${id}`}
-        src={`/${done}`}
+        done={done}
         onClick={() => {
           if (toggleTodo) toggleTodo();
         }}
         onKeyDown={emptyHandler}
         type="button"
+        role="button"
       />
       <button
         data-testid={`delete-${id}`}

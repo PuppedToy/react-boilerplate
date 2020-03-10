@@ -10,12 +10,14 @@ import PropTypes from 'prop-types';
 
 import TodoItem from 'components/TodoItem';
 
+import Wrapper from './Wrapper';
+
 function TodoList({ todos, deleteTodo, toggleTodo, editTodo }) {
   const [focusedItem, setFocusedItem] = useState(null);
   const [focusedItemTitle, setFocusedItemTitle] = useState(null);
 
   return (
-    <div>
+    <Wrapper>
       {todos.map(({ id, title, done }) => (
         <TodoItem
           key={`todo-item-${id}`}
@@ -46,7 +48,7 @@ function TodoList({ todos, deleteTodo, toggleTodo, editTodo }) {
           onChangeTodoInput={newValue => setFocusedItemTitle(newValue)}
         />
       ))}
-    </div>
+    </Wrapper>
   );
 }
 
