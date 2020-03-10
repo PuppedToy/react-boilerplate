@@ -17,6 +17,8 @@ module.exports = {
       lines: 98,
     },
   },
+  coverageReporters: ['json-summary', 'text', 'lcov'],
+  coverageDirectory: './coverage',
   moduleDirectories: ['node_modules', 'app'],
   moduleNameMapper: {
     '.*\\.(css|less|styl|scss|sass)$': '<rootDir>/internals/mocks/cssModule.js',
