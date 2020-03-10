@@ -1,9 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<TodoList /> Should render and match the snapshot on empty todos 1`] = `<div />`;
+exports[`<TodoList /> Should render and match the snapshot on empty todos 1`] = `
+<div
+  class="Wrapper-sc-12k4hfk-0 bCxcuC"
+/>
+`;
 
 exports[`<TodoList /> Should render and match the snapshot with 3 todos 1`] = `
-<div>
+<div
+  class="Wrapper-sc-12k4hfk-0 bCxcuC"
+>
   <div
     id="todo-1"
   >
@@ -13,9 +19,10 @@ exports[`<TodoList /> Should render and match the snapshot with 3 todos 1`] = `
     >
       A todo
     </button>
-    <button
+    <div
+      class="Checkbox-eu7a0t-0 hmJxlM"
       data-testid="toggle-1"
-      src="/false"
+      role="button"
       type="button"
     />
     <button
@@ -33,9 +40,10 @@ exports[`<TodoList /> Should render and match the snapshot with 3 todos 1`] = `
     >
       Another todo
     </button>
-    <button
+    <div
+      class="Checkbox-eu7a0t-0 hmJxlM"
       data-testid="toggle-2"
-      src="/true"
+      role="button"
       type="button"
     />
     <button
@@ -53,9 +61,10 @@ exports[`<TodoList /> Should render and match the snapshot with 3 todos 1`] = `
     >
       Last todo
     </button>
-    <button
+    <div
+      class="Checkbox-eu7a0t-0 hmJxlM"
       data-testid="toggle-3"
-      src="/false"
+      role="button"
       type="button"
     />
     <button
@@ -68,7 +77,9 @@ exports[`<TodoList /> Should render and match the snapshot with 3 todos 1`] = `
 `;
 
 exports[`<TodoList /> Should render and match the snapshot with 3 todos after clicking one of them 1`] = `
-<div>
+<div
+  class="Wrapper-sc-12k4hfk-0 bCxcuC"
+>
   <div
     id="todo-1"
   >
@@ -78,9 +89,10 @@ exports[`<TodoList /> Should render and match the snapshot with 3 todos after cl
     >
       A todo
     </button>
-    <button
+    <div
+      class="Checkbox-eu7a0t-0 hmJxlM"
       data-testid="toggle-1"
-      src="/false"
+      role="button"
       type="button"
     />
     <button
@@ -98,9 +110,10 @@ exports[`<TodoList /> Should render and match the snapshot with 3 todos after cl
     >
       Another todo
     </button>
-    <button
+    <div
+      class="Checkbox-eu7a0t-0 hmJxlM"
       data-testid="toggle-2"
-      src="/true"
+      role="button"
       type="button"
     />
     <button
@@ -117,9 +130,10 @@ exports[`<TodoList /> Should render and match the snapshot with 3 todos after cl
       type="text"
       value="Last todo"
     />
-    <button
+    <div
+      class="Checkbox-eu7a0t-0 hmJxlM"
       data-testid="toggle-3"
-      src="/false"
+      role="button"
       type="button"
     />
     <button
@@ -132,7 +146,9 @@ exports[`<TodoList /> Should render and match the snapshot with 3 todos after cl
 `;
 
 exports[`<TodoList /> Should render and match the snapshot with one todo 1`] = `
-<div>
+<div
+  class="Wrapper-sc-12k4hfk-0 bCxcuC"
+>
   <div
     id="todo-1"
   >
@@ -142,9 +158,10 @@ exports[`<TodoList /> Should render and match the snapshot with one todo 1`] = `
     >
       A todo
     </button>
-    <button
+    <div
+      class="Checkbox-eu7a0t-0 hmJxlM"
       data-testid="toggle-1"
-      src="/false"
+      role="button"
       type="button"
     />
     <button

@@ -10,7 +10,9 @@ exports[`<TodoListPage /> Unit testing with mocked Apollo server Should render a
     </span>
   </h1>
   <div>
-    <div>
+    <div
+      class="Wrapper-sc-12k4hfk-0 bCxcuC"
+    >
       <div
         id="todo-1"
       >
@@ -20,9 +22,10 @@ exports[`<TodoListPage /> Unit testing with mocked Apollo server Should render a
         >
           Item 1
         </button>
-        <button
+        <div
+          class="Checkbox-eu7a0t-0 hmJxlM"
           data-testid="toggle-1"
-          src="/false"
+          role="button"
           type="button"
         />
         <button
@@ -40,9 +43,10 @@ exports[`<TodoListPage /> Unit testing with mocked Apollo server Should render a
         >
           Item 2
         </button>
-        <button
+        <div
+          class="Checkbox-eu7a0t-0 hmJxlM"
           data-testid="toggle-2"
-          src="/true"
+          role="button"
           type="button"
         />
         <button
@@ -60,9 +64,10 @@ exports[`<TodoListPage /> Unit testing with mocked Apollo server Should render a
         >
           Item 3
         </button>
-        <button
+        <div
+          class="Checkbox-eu7a0t-0 hmJxlM"
           data-testid="toggle-3"
-          src="/false"
+          role="button"
           type="button"
         />
         <button

@@ -10,9 +10,10 @@ exports[`<TodoItem /> Should render and match the snapshot 1`] = `
   >
     One item
   </button>
-  <button
+  <div
+    class="Checkbox-eu7a0t-0 hmJxlM"
     data-testid="toggle-1"
-    src="/false"
+    role="button"
     type="button"
   />
   <button
@@ -32,9 +33,10 @@ exports[`<TodoItem /> Should render and match the snapshot when done is true 1`]
     type="text"
     value="One item"
   />
-  <button
+  <div
+    class="Checkbox-eu7a0t-0 hmJxlM"
     data-testid="toggle-1"
-    src="/true"
+    role="button"
     type="button"
   />
   <button
@@ -54,9 +56,10 @@ exports[`<TodoItem /> Should render and match the snapshot when focused is true 
     type="text"
     value="One item"
   />
-  <button
+  <div
+    class="Checkbox-eu7a0t-0 hmJxlM"
     data-testid="toggle-1"
-    src="/false"
+    role="button"
     type="button"
   />
   <button
