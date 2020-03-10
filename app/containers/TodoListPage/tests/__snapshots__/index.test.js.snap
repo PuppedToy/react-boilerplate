@@ -11,7 +11,7 @@ exports[`<TodoListPage /> Unit testing with mocked Apollo server Should render a
   </h1>
   <div>
     <div
-      class="Wrapper-sc-12k4hfk-0 bCxcuC"
+      class="Wrapper-sc-12k4hfk-0 dilioB"
     >
       <div
         class="Wrapper-ziinx6-0 ecjWnr"
@@ -107,13 +107,17 @@ exports[`<TodoListPage /> Unit testing with mocked Apollo server Should render a
         </div>
       </div>
     </div>
-    <div>
+    <div
+      class="AddItemWrapper__Input-lplq01-0 cHQKtl"
+    >
       <input
+        class="AddItemInput__Input-sc-6roog6-0 DxTDi"
         data-testid="add-todo-input"
         type="text"
         value=""
       />
       <button
+        class="AddItemButton__Input-lqznlb-0 eMejmQ"
         data-testid="add-todo-button"
         type="button"
       >

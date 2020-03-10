@@ -40,7 +40,7 @@ exports[`<TodoItem /> Should render and match the snapshot when done is true 1`]
   id="todo-1"
 >
   <input
-    class="Input-tpeqbo-0 itMdwa"
+    class="Input-tpeqbo-0 VuylU"
     data-testid="editInput-1"
     type="text"
     value="One item"
@@ -72,7 +72,7 @@ exports[`<TodoItem /> Should render and match the snapshot when focused is true 
   id="todo-1"
 >
   <input
-    class="Input-tpeqbo-0 itMdwa"
+    class="Input-tpeqbo-0 VuylU"
     data-testid="editInput-1"
     type="text"
     value="One item"

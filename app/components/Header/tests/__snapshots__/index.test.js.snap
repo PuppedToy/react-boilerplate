@@ -31,6 +31,14 @@ exports[`<Header /> should render a div 1`] = `
         Features
       </span>
     </a>
+    <a
+      class="HeaderLink-sc-1mtyaiv-0 hMiTYG"
+      href="/todo"
+    >
+      <span>
+        Todo List
+      </span>
+    </a>
   </div>
 </div>
 `;

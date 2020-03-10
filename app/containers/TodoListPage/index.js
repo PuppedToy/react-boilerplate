@@ -21,6 +21,10 @@ import {
   ADD_TODO_MUTATION,
 } from './queries';
 
+import AddItemInput from './AddItemInput';
+import AddItemButton from './AddItemButton';
+import AddItemWrapper from './AddItemWrapper';
+
 function useMutationWithRefetch(query, refetch, otherOptions = {}) {
   return useMutation(query, {
     ...otherOptions,
@@ -65,8 +69,8 @@ export function TodoListPage() {
             toggleTodo={id => toggleTodo({ variables: { id } })}
             editTodo={(id, title) => editTodo({ variables: { id, title } })}
           />
-          <div>
-            <input
+          <AddItemWrapper>
+            <AddItemInput
               data-testid="add-todo-input"
               type="text"
               value={newTodoTitle}
@@ -78,14 +82,14 @@ export function TodoListPage() {
                 if (code === 13 || which === 13) addTodoHandler();
               }}
             />
-            <button
+            <AddItemButton
               type="button"
               data-testid="add-todo-button"
               onClick={addTodoHandler}
             >
               <FormattedMessage {...messages.add} />
-            </button>
-          </div>
+            </AddItemButton>
+          </AddItemWrapper>
         </div>
       )}
     </div>
