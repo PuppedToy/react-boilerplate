@@ -7,6 +7,7 @@ const Checkbox = styled.div`
   width: 40px;
   height: 40px;
   overflow-y: auto;
+  cursor: pointer;
   border-style: none;
   background-repeat: no-repeat;
   background-position: center;

@@ -11,67 +11,97 @@ exports[`<TodoList /> Should render and match the snapshot with 3 todos 1`] = `
   class="Wrapper-sc-12k4hfk-0 bCxcuC"
 >
   <div
+    class="Wrapper-ziinx6-0 ecjWnr"
     id="todo-1"
   >
-    <button
+    <div
+      class="TodoTitle-xxpseh-0 cHcgZX"
       data-testid="todo-1"
+      role="button"
       type="button"
     >
       A todo
-    </button>
+    </div>
     <div
-      class="Checkbox-eu7a0t-0 hmJxlM"
-      data-testid="toggle-1"
-      role="button"
-      type="button"
-    />
-    <button
-      data-testid="delete-1"
-      src="/false"
-      type="button"
-    />
+      class="TodoOptions-sc-1s3b1hj-0 jWmTOe"
+    >
+      <div
+        alt="check"
+        class="Checkbox-eu7a0t-0 hjQtxn"
+        data-testid="toggle-1"
+        role="button"
+        type="button"
+      />
+      <div
+        alt="delete"
+        class="DeleteButton-sc-2zb8s8-0 ceLVod"
+        data-testid="delete-1"
+        role="button"
+        type="button"
+      />
+    </div>
   </div>
   <div
+    class="Wrapper-ziinx6-0 ecjWnr"
     id="todo-2"
   >
-    <button
+    <div
+      class="TodoTitle-xxpseh-0 cHcgZX"
       data-testid="todo-2"
+      role="button"
       type="button"
     >
       Another todo
-    </button>
+    </div>
     <div
-      class="Checkbox-eu7a0t-0 hmJxlM"
-      data-testid="toggle-2"
-      role="button"
-      type="button"
-    />
-    <button
-      data-testid="delete-2"
-      src="/false"
-      type="button"
-    />
+      class="TodoOptions-sc-1s3b1hj-0 jWmTOe"
+    >
+      <div
+        alt="uncheck"
+        class="Checkbox-eu7a0t-0 hjQtxn"
+        data-testid="toggle-2"
+        role="button"
+        type="button"
+      />
+      <div
+        alt="delete"
+        class="DeleteButton-sc-2zb8s8-0 ceLVod"
+        data-testid="delete-2"
+        role="button"
+        type="button"
+      />
+    </div>
   </div>
   <div
+    class="Wrapper-ziinx6-0 ecjWnr"
     id="todo-3"
   >
-    <button
+    <div
+      class="TodoTitle-xxpseh-0 cHcgZX"
       data-testid="todo-3"
+      role="button"
       type="button"
     >
       Last todo
-    </button>
+    </div>
     <div
-      class="Checkbox-eu7a0t-0 hmJxlM"
-      data-testid="toggle-3"
-      role="button"
-      type="button"
-    />
-    <button
-      data-testid="delete-3"
-      src="/false"
-      type="button"
-    />
+      class="TodoOptions-sc-1s3b1hj-0 jWmTOe"
+    >
+      <div
+        alt="check"
+        class="Checkbox-eu7a0t-0 hjQtxn"
+        data-testid="toggle-3"
+        role="button"
+        type="button"
+      />
+      <div
+        alt="delete"
+        class="DeleteButton-sc-2zb8s8-0 ceLVod"
+        data-testid="delete-3"
+        role="button"
+        type="button"
+      />
+    </div>
   </div>
 </div>
 `;
@@ -81,66 +111,95 @@ exports[`<TodoList /> Should render and match the snapshot with 3 todos after cl
   class="Wrapper-sc-12k4hfk-0 bCxcuC"
 >
   <div
+    class="Wrapper-ziinx6-0 ecjWnr"
     id="todo-1"
   >
-    <button
+    <div
+      class="TodoTitle-xxpseh-0 cHcgZX"
       data-testid="todo-1"
+      role="button"
       type="button"
     >
       A todo
-    </button>
+    </div>
     <div
-      class="Checkbox-eu7a0t-0 hmJxlM"
-      data-testid="toggle-1"
-      role="button"
-      type="button"
-    />
-    <button
-      data-testid="delete-1"
-      src="/false"
-      type="button"
-    />
+      class="TodoOptions-sc-1s3b1hj-0 jWmTOe"
+    >
+      <div
+        alt="check"
+        class="Checkbox-eu7a0t-0 hjQtxn"
+        data-testid="toggle-1"
+        role="button"
+        type="button"
+      />
+      <div
+        alt="delete"
+        class="DeleteButton-sc-2zb8s8-0 ceLVod"
+        data-testid="delete-1"
+        role="button"
+        type="button"
+      />
+    </div>
   </div>
   <div
+    class="Wrapper-ziinx6-0 ecjWnr"
     id="todo-2"
   >
-    <button
+    <div
+      class="TodoTitle-xxpseh-0 cHcgZX"
       data-testid="todo-2"
+      role="button"
       type="button"
     >
       Another todo
-    </button>
+    </div>
     <div
-      class="Checkbox-eu7a0t-0 hmJxlM"
-      data-testid="toggle-2"
-      role="button"
-      type="button"
-    />
-    <button
-      data-testid="delete-2"
-      src="/false"
-      type="button"
-    />
+      class="TodoOptions-sc-1s3b1hj-0 jWmTOe"
+    >
+      <div
+        alt="uncheck"
+        class="Checkbox-eu7a0t-0 hjQtxn"
+        data-testid="toggle-2"
+        role="button"
+        type="button"
+      />
+      <div
+        alt="delete"
+        class="DeleteButton-sc-2zb8s8-0 ceLVod"
+        data-testid="delete-2"
+        role="button"
+        type="button"
+      />
+    </div>
   </div>
   <div
+    class="Wrapper-ziinx6-0 ecjWnr"
     id="todo-3"
   >
     <input
+      class="Input-tpeqbo-0 itMdwa"
       data-testid="editInput-3"
       type="text"
       value="Last todo"
     />
     <div
-      class="Checkbox-eu7a0t-0 hmJxlM"
-      data-testid="toggle-3"
-      role="button"
-      type="button"
-    />
-    <button
-      data-testid="delete-3"
-      src="/true"
-      type="button"
-    />
+      class="TodoOptions-sc-1s3b1hj-0 jWmTOe"
+    >
+      <div
+        alt="check"
+        class="Checkbox-eu7a0t-0 hjQtxn"
+        data-testid="toggle-3"
+        role="button"
+        type="button"
+      />
+      <div
+        alt="delete"
+        class="DeleteButton-sc-2zb8s8-0 ceLVod"
+        data-testid="delete-3"
+        role="button"
+        type="button"
+      />
+    </div>
   </div>
 </div>
 `;
@@ -150,25 +209,35 @@ exports[`<TodoList /> Should render and match the snapshot with one todo 1`] = `
   class="Wrapper-sc-12k4hfk-0 bCxcuC"
 >
   <div
+    class="Wrapper-ziinx6-0 ecjWnr"
     id="todo-1"
   >
-    <button
+    <div
+      class="TodoTitle-xxpseh-0 cHcgZX"
       data-testid="todo-1"
+      role="button"
       type="button"
     >
       A todo
-    </button>
+    </div>
     <div
-      class="Checkbox-eu7a0t-0 hmJxlM"
-      data-testid="toggle-1"
-      role="button"
-      type="button"
-    />
-    <button
-      data-testid="delete-1"
-      src="/false"
-      type="button"
-    />
+      class="TodoOptions-sc-1s3b1hj-0 jWmTOe"
+    >
+      <div
+        alt="check"
+        class="Checkbox-eu7a0t-0 hjQtxn"
+        data-testid="toggle-1"
+        role="button"
+        type="button"
+      />
+      <div
+        alt="delete"
+        class="DeleteButton-sc-2zb8s8-0 ceLVod"
+        data-testid="delete-1"
+        role="button"
+        type="button"
+      />
+    </div>
   </div>
 </div>
 `;

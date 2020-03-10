@@ -8,6 +8,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Checkbox from './Checkbox';
+import DeleteButton from './DeleteButton';
+import Wrapper from './Wrapper';
+import TodoOptions from './TodoOptions';
+import TodoTitle from './TodoTitle';
+import Input from './Input';
 
 function TodoItem({
   id,
@@ -35,9 +40,9 @@ function TodoItem({
   const emptyHandler = () => {};
 
   return (
-    <div id={`todo-${id}`}>
+    <Wrapper id={`todo-${id}`}>
       {focused ? (
-        <input
+        <Input
           type="text"
           value={title}
           onChange={inputOnChangeHandler}
@@ -45,37 +50,42 @@ function TodoItem({
           data-testid={`editInput-${id}`}
         />
       ) : (
-        <button
+        <TodoTitle
           onClick={() => {
             if (focusTodo) focusTodo();
           }}
           onKeyDown={emptyHandler}
           data-testid={`todo-${id}`}
           type="button"
+          role="button"
         >
           {title}
-        </button>
+        </TodoTitle>
       )}
-      <Checkbox
-        data-testid={`toggle-${id}`}
-        done={done}
-        onClick={() => {
-          if (toggleTodo) toggleTodo();
-        }}
-        onKeyDown={emptyHandler}
-        type="button"
-        role="button"
-      />
-      <button
-        data-testid={`delete-${id}`}
-        src={`/${focused}`}
-        onClick={() => {
-          if (deleteTodo) deleteTodo();
-        }}
-        onKeyDown={emptyHandler}
-        type="button"
-      />
-    </div>
+      <TodoOptions>
+        <Checkbox
+          data-testid={`toggle-${id}`}
+          done={done}
+          onClick={() => {
+            if (toggleTodo) toggleTodo();
+          }}
+          onKeyDown={emptyHandler}
+          type="button"
+          role="button"
+          alt={done ? 'uncheck' : 'check'}
+        />
+        <DeleteButton
+          data-testid={`delete-${id}`}
+          onClick={() => {
+            if (deleteTodo) deleteTodo();
+          }}
+          onKeyDown={emptyHandler}
+          type="button"
+          role="button"
+          alt="delete"
+        />
+      </TodoOptions>
+    </Wrapper>
   );
 }
 
