@@ -13,7 +13,9 @@ pipeline {
         }
         stage('test') {
             steps {
-                sh "npm test"
+                gitStatusWrapper(credentialsId: 'github-token', gitHubContext: 'Status', description: 'Validating') {
+                    sh "npm test"
+                }
             }
         }
         stage('build') {
