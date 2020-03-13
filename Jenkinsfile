@@ -7,23 +7,23 @@ pipeline {
     stages {
         stage('setup') {
             steps {
-                sh 'pm2 stop "${params.PM2_JOB_NAME}"'
-                sh 'npm install'
+                sh "pm2 stop \"${params.PM2_PREV_JOB_NAME}\" || true"
+                sh "npm install"
             }
         }
         stage('test') {
             steps {
-                sh 'npm test'
+                sh "npm test"
             }
         }
         stage('build') {
             steps {
-                sh 'npm run build'
+                sh "npm run build"
             }
         }
         stage('run') {
             steps {
-                sh 'pm2 npm --name "${params.PM2_JOB_NAME}" -- run start:prod'
+                sh "pm2 npm --name \"${params.PM2_JOB_NAME}\" -- run start:prod"
             }
         }
     }
