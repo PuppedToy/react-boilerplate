@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('setup') {
             steps {
-                sh "pm2 stop \"${params.PM2_PREV_JOB_NAME}\" || true"
+                sh "pm2 delete \"${params.PM2_PREV_JOB_NAME}\" || true"
                 sh "npm install"
             }
         }
