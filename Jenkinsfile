@@ -25,7 +25,7 @@ pipeline {
         }
         stage('run') {
             steps {
-                sh "pm2 npm --name \"${params.PM2_JOB_NAME}\" -- run start:prod"
+                sh "pm2 start npm --name \"${params.PM2_JOB_NAME}\" -- run start:prod"
             }
         }
     }
