@@ -1,0 +1,175 @@
+scalar Date
+
+enum AlignmentType {
+  LAWFUL_GOOD
+  NEUTRAL_GOOD
+  CHAOTIC_GOOD
+  LAWFUL_NEUTRAL
+  NEUTRAL
+  CHAOTIC_NEUTRAL
+  LAWFUL_EVIL
+  NEUTRAL_EVIL
+  CHAOTIC_EVIL
+}
+
+# Every stat type will be used for some abilities to scale.
+# Strength will be the primary stat when using a physical weapon
+# Intelligence will be the primary stat when using a magical weapon
+# Charisma can be used to NPCs with higher level to join the party on combat
+# Also, every stat provide extra usefulness.
+enum StatType {
+  STRENGTH # Output physical damage + Combat weight carry (bigger weapons can be used)
+  DEXTERITY # Speed (manna / turn) + Initiative + Debuff efectiveness
+  CONSTITUTION # HP + Weight carry
+  INTELLIGENCE # Output magical damage + Higher spells level + Spell capacity
+  WISDOM # Cards in hand + Self debuff resistance
+  CHARISMA # Companion level
+}
+
+enum CharacterFieldType {
+  WORD
+  SMALL
+  MEDIUM
+  LARGE
+  LIST
+  CHECKBOX
+}
+
+enum Rarity {
+  COMMON
+  UNCOMMON
+  RARE
+  ELITE
+  LEGENDARY
+}
+
+# https://slay-the-spire.fandom.com/wiki/Ironclad_Cards
+enum CardType {
+  # Dunno if this makes sense
+  ATTACK
+  SKILL
+  POWER
+  STATUS
+  CURSE
+}
+
+enum CampaignRoleType {
+  DM
+  DMPlayer
+  Player
+}
+
+type Stats {
+  strength: Int!
+  dexterity: Int!
+  constitution: Int!
+  intelligence: Int!
+  wisdom: Int!
+  charsima: Int!
+  armorClass: Int! # armor every turn. Given by suit, skills and spells
+  initiative: Int! # first to attack in turn
+  speed: Int! # manna / turn
+  maxHp: Int! # obvius stat
+}
+
+type Skill {
+  name: String!
+  value: Int!
+  trained: Boolean!
+  stat: StatType!
+}
+
+type CharacterField {
+  name: String!
+  type: CharacterFieldType!
+  value: String!
+}
+
+type Ability {
+  name: String!
+  picture: String!
+  effect: String!
+  flavor: String!
+}
+
+type Item {
+  name: String!
+  picture: String!
+  effect: String!
+  flavor: String!
+  weight: Int!
+  rarity: Rarity!
+}
+
+type Card {
+  # For the future's sake
+  name: String!
+  cost: Int!
+  type: CardType!
+  effects: [String!]! # This will be the core
+  rarity: Rarity! # Inherited from item or given by ability
+}
+
+type Character {
+  id: ID!
+  name: String!
+  picture: String!
+  alignment: AlignmentType!
+  fields: [CharacterField]!
+  level: Int!
+  exp: Int!
+  stats: Stats!
+  skills: [Skill]!
+  inventory: [Item]!
+  abilities: [Ability]!
+}
+
+type Enemy {
+  id: ID!
+  name: String!
+  picture: String!
+  level: Int!
+  description: String!
+  stats: Stats!
+  alignment: AlignmentType!
+  fields: [CharacterField]!
+  inventory: [Item]!
+  abilities: [Ability]!
+}
+
+type CampaignParticipant {
+  userId: ID!
+  characters: [Character!]!
+  role: CampaignRoleType!
+}
+
+type Campaign {
+  id: ID!
+  name: String!
+  description: String!
+  characterBase: Character
+  customEnemies: [Enemy]!
+  customItems: [Item]!
+  participants: [CampaignParticipant!]!
+}
+
+type User {
+  id: ID!
+  name: String!
+  password: String!
+  validated: Boolean!
+  email: String
+  characters: [Character]!
+  campaigns: [Campaign]!
+}
+
+type Query {
+  alive: Boolean
+  getUser(id: ID): User
+  login(name: String!, password: String!): String
+  token: ID
+}
+
+type Mutation {
+  createUser(name: String!, password: String!): String
+}

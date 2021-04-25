@@ -1,0 +1,294 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Hello World</title>
+  <style type="text/css">
+  	* {
+  		margin: 0;
+  	}
+  </style>
+</head>
+<body>
+  <script src="/api/pixi/pixi.min.js"></script>
+  <script type="text/javascript">
+    let type = "WebGL"
+    if(!PIXI.utils.isWebGLSupported()){
+      type = "canvas"
+    }
+
+	function arrayShuffle(array) {
+		if (!Array.isArray(array)) {
+			throw new TypeError(`Expected an array, got ${typeof array}`);
+		}
+
+		array = [...array];
+
+		for (let index = array.length - 1; index > 0; index--) {
+			const newIndex = Math.floor(Math.random() * (index + 1));
+			[array[index], array[newIndex]] = [array[newIndex], array[index]];
+		}
+
+		return array;
+	}
+
+    const app = new PIXI.Application({
+    	width: 256,
+    	height: 256,
+    	autoDensity: true,
+    });
+
+    app.renderer.view.style.position = "absolute";
+	app.renderer.view.style.display = "block";
+	app.renderer.resize(window.innerWidth, window.innerHeight);
+	app.renderer.backgroundColor = 0xffffff;
+    document.body.appendChild(app.view);
+
+	PIXI.Loader.shared
+	.add([
+		"/api/public/images/cardoutline.png",
+		"/api/public/images/sword.png",
+		"/api/public/images/shield.png",
+		"/api/public/images/monster1.jpg",
+		"/api/public/images/monster2.png",
+		"/api/public/images/hero1.jpg",
+		"/api/public/images/hero2.jpg",
+	])
+	.load(setup);
+
+	function onDragStart(event)
+	{
+		// store a reference to the data
+		// the reason for this is because of multitouch
+		// we want to track the movement of this particular touch
+		this.data = event.data;
+		this.relative = {
+			x: this.data.global.x - this.position.x,
+			y: this.data.global.y - this.position.y,
+		};
+		this.dragging = true;
+	}
+
+	function onDragEnd()
+	{
+		this.dragging = false;
+
+		// set the interaction data to null
+		this.data = null;
+		this.relative = null;
+		this.interactive = false;
+
+		const TIMES = 10;
+
+		const angleDiff = ((this.origin.angle > 180 ? this.origin.angle - 360 : this.origin.angle) - (this.angle > 180 ? this.angle - 360 : this.angle))/TIMES;
+		const xDiff = (this.origin.x - this.x)/TIMES;
+		const yDiff = (this.origin.y - this.y)/TIMES;
+
+		let count = 0;
+		this.interval = setInterval(() => {
+			if(count++ < TIMES) {
+				this.angle += angleDiff;
+				this.x += xDiff;
+				this.y += yDiff;
+			} else {
+				this.angle = this.origin.angle;
+				this.x = this.origin.x;
+				this.y = this.origin.y;
+				this.interactive = true;
+				clearInterval(this.interval);
+				this.interval = undefined;
+			}
+		}, 30);
+	}
+
+	function onDragMove()
+	{
+		if (this.dragging)
+		{
+			const newPosition = this.data.getLocalPosition(this.parent);
+			const test = this.data.global;
+			this.position.set(newPosition.x - this.relative.x, newPosition.y - this.relative.y);
+			if(this.angle <= 180 && this.angle >= 1) this.angle -= 2;
+			else if(this.angle < 1 && this.angle > 0 || this.angle < 0) this.angle = 0;
+			else if(this.angle > 180 && this.angle <= 359) this.angle += 2;
+			else if(this.angle > 359) this.angle = 0;
+		}
+	}
+
+	function createCard() {
+		const sprite = new PIXI.Sprite(
+			PIXI.Loader.shared.resources["/api/public/images/cardoutline.png"].texture
+		);
+		const container = new PIXI.Container();
+		sprite.width *= 0.3;
+		sprite.height *= 0.3;
+		const graphics = new PIXI.Graphics();
+		container.addChild(sprite);
+		graphics.beginFill(0xFFFFFF);
+		graphics.lineStyle(2, 0x000000);
+		graphics.drawRect(20, 20, 180, 140);
+		graphics.drawCircle(10, 10, 14);
+		container.addChild(graphics);
+		const cost = new PIXI.Text('1', { fontFamily: 'Arial', fontSize: 16, align: 'center'});
+		cost.position.set(5, 2);
+		container.addChild(cost);
+		const drawingPic = Math.random() < 0.5 ? "/api/public/images/sword.png" : "/api/public/images/shield.png";
+		const drawing = new PIXI.Sprite(
+			PIXI.Loader.shared.resources[drawingPic].texture
+		);
+		drawing.position.set(20, 20);
+		drawing.width = 180;
+		drawing.height = 140;
+		container.addChild(drawing);
+		draggable(container);
+		return container;
+	}
+
+	const teamColors = [0x293E85, 0x852F29, 0x338529, 0xE8E630, 0xE89730, 0xF162FF, 0x58FFF0];
+	function createCharacterSprite(character, gridSize, id, teamsNumber) {
+
+		const gridX = parseInt(id/gridSize, 10);
+		const gridY = id%gridSize;
+
+		const teamWidth = app.renderer.width/teamsNumber;
+		const teamHeight = app.renderer.height*0.8;
+
+		const cellWidth = teamWidth/gridSize;
+		const cellHeight = teamHeight/gridSize;
+
+		const x = gridX * cellWidth + character.team*teamWidth;
+		const y = gridY * cellHeight;
+		
+		const picSize = Math.min(cellWidth, cellHeight*0.9);
+
+		const container = new PIXI.Container;
+		const graphics = new PIXI.Graphics();
+		// graphics.beginFill(0xFFFFFF);
+		// graphics.lineStyle(1, 0x000000);
+		// graphics.drawRect(x, y, cellWidth, cellHeight);
+		graphics.beginFill(teamColors[character.team]);
+		graphics.lineStyle(0);
+		graphics.drawRect(x + 5, y + picSize - 5, picSize - 10, cellHeight*0.09);
+		container.addChild(graphics);
+		
+		const sprite = new PIXI.Sprite(
+			PIXI.Loader.shared.resources[character.pic].texture
+		);
+		sprite.position.set(x + 5, y + 5);
+		sprite.width = picSize - 10;
+		sprite.height = picSize - 10;
+		container.addChild(sprite);
+		return container;
+	}
+
+	function draggable(sprite) {
+		sprite.interactive = true;
+		return sprite
+			.on('mousedown', onDragStart)
+			.on('touchstart', onDragStart)
+			.on('mouseup', onDragEnd)
+			.on('mouseupoutside', onDragEnd)
+			.on('touchend', onDragEnd)
+			.on('touchendoutside', onDragEnd)
+			.on('mousemove', onDragMove)
+			.on('touchmove', onDragMove);
+	}
+
+	class Character {
+
+		constructor({
+			level = 0,
+			str = 10,
+			dex = 10,
+			con = 10,
+			int = 10,
+			wis = 10,
+			cha = 10,
+			team = 0,
+			auto = false,
+			pic,
+			deck,
+		}) {
+			this.level = level;
+			this.str = str;
+			this.dex = dex;
+			this.con = con;
+			this.int = int;
+			this.wis = wis;
+			this.cha = cha;
+			this.team = team;
+			this.pic = pic;
+			this.deck = deck;
+			if(auto) this.autoAssignStats();
+		}
+
+		autoAssignStats() {
+			const rolls = arrayShuffle([15, 14, 13, 12, 10, 8]);
+			const asis = arrayShuffle(['str', 'dex', 'con', 'int', 'wis', 'cha']);
+			asis.forEach((asi) => {
+				this[asi] = rolls.pop();
+			});
+			for(let i = 0; i < parseInt(this.level / 4, 10) * 2; i++) {
+				this[asis[parseInt(Math.random()*6, 10)]] += 1;
+			}
+		}
+
+	}
+
+	function setup() {
+		const N = 9;
+		const CHARS_PER_TEAM = 2;
+		const TEAMS = 2;
+		
+		const cards = new Array(N).fill().map(() => createCard());
+		const char_pics = [
+			'/api/public/images/hero1.jpg',
+			'/api/public/images/hero2.jpg',
+			'/api/public/images/monster1.jpg',
+			'/api/public/images/monster2.png',
+		];
+		const teams = new Array(TEAMS).fill().map((_, team) => 
+			new Array(CHARS_PER_TEAM).fill().map((_, charIdx) => new Character({ 
+				team,
+				pic: char_pics[charIdx + 2*team],
+				auto: true
+			}))
+		);
+
+		teams.forEach(team => {
+			const gridSize = parseInt(Math.sqrt(team.length), 10)+1;
+			team.forEach((character, id) => {
+				const characterSprite = createCharacterSprite(
+					character,
+					gridSize,
+					id,
+					teams.length
+				);
+				app.stage.addChild(characterSprite);
+			});
+		});
+
+		cards.forEach((card, index) => {
+			const cardsZoneSize = app.renderer.width*0.8;
+			const angle = (-((N/2-index)*(90/N))+360)%360;
+			const rotationDeviation = angle-180;
+
+			const rotationCorrectionAbs = (180-Math.abs(rotationDeviation))/180;
+			const isLeftSide = rotationDeviation > 0;
+			
+			const negativeAngle = -((N/2-index)*(90/N));
+			const rotationCorrection = negativeAngle/360;
+			let rotationCorrectionX = -rotationCorrection*card.width*4;
+			const x = app.renderer.width/2 - card.width/4 - cardsZoneSize/2 + cardsZoneSize/N*index + rotationCorrectionX;
+			
+			let rotationCorrectionY = rotationCorrectionAbs*card.height*60*Math.pow((x-app.renderer.width/2)/app.renderer.width/2, 2);
+			const y = app.renderer.height - card.height*0.7 + rotationCorrectionY;
+			card.position.set(x, y);
+			card.angle = angle;
+			card.origin = {x, y, angle};
+			app.stage.addChild(card)
+		});
+	}
+  </script>
+</body>
+</html>

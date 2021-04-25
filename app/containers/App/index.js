@@ -11,11 +11,11 @@ import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import { Switch, Route } from 'react-router-dom';
 
-import HomePage from 'containers/HomePage/Loadable';
-import FeaturePage from 'containers/FeaturePage/Loadable';
-import NotFoundPage from 'containers/NotFoundPage/Loadable';
+import Welcome from 'containers/Welcome/Loadable';
+import Dashboard from 'containers/Dashboard/Loadable';
+import Login from 'containers/Login/Loadable';
+import Signup from 'containers/Signup/Loadable';
 import Header from 'components/Header';
-import Footer from 'components/Footer';
 
 import GlobalStyle from '../../global-styles';
 
@@ -39,11 +39,11 @@ export default function App() {
       </Helmet>
       <Header />
       <Switch>
-        <Route exact path="/" component={HomePage} />
-        <Route path="/features" component={FeaturePage} />
-        <Route path="" component={NotFoundPage} />
+        <Route exact path="/" component={Welcome} />
+        <Route exact path="/dashboard" component={Dashboard} />
+        <Route exact path="/login" component={Login} />
+        <Route exact path="/signup" component={Signup} />
       </Switch>
-      <Footer />
       <GlobalStyle />
     </AppWrapper>
   );
