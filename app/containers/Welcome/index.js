@@ -8,7 +8,7 @@ export default function Welcome() {
     <Container>
       <Row>
         <Col>
-          <h2>Welcome to RPG Cards!</h2>
+          <h2>Welcome to the app!</h2>
           <h3>
             Do you have an account? <Link to="/login">Log in here</Link>.
           </h3>
