@@ -82,7 +82,7 @@ type Skill {
 type CharacterField {
   name: String!
   type: CharacterFieldType!
-  value: String!
+  value: String
 }
 
 type Ability {
@@ -110,9 +110,26 @@ type Card {
   rarity: Rarity! # Inherited from item or given by ability
 }
 
+type CharacterRace {
+  id: ID!
+  name: String!
+  description: String!
+  pictures: [String]
+  # TODO traits, etc.
+}
+
+type CharacterClass {
+  id: ID!
+  name: String!
+  description: String!
+  pictures: [String]
+  # TODO skills, etc.
+}
+
 type Character {
   id: ID!
   name: String!
+  race: CharacterRace!
   picture: String!
   alignment: AlignmentType!
   fields: [CharacterField]!
@@ -145,9 +162,12 @@ type CampaignParticipant {
 
 type Campaign {
   id: ID!
+  owner: ID!
+  availableRaces: [CharacterRace!]!
+  availableClasses: [CharacterClass!]!
   name: String!
   description: String!
-  characterBase: Character
+  characterFields: [CharacterField]!
   customEnemies: [Enemy]!
   customItems: [Item]!
   participants: [CampaignParticipant!]!
@@ -172,4 +192,6 @@ type Query {
 
 type Mutation {
   createUser(name: String!, password: String!): String
+  createCampaign: Campaign
+  editCampaign(campaign: Campaign!)
 }

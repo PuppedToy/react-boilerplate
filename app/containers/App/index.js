@@ -15,7 +15,6 @@ import Welcome from 'containers/Welcome/Loadable';
 import Dashboard from 'containers/Dashboard/Loadable';
 import Login from 'containers/Login/Loadable';
 import Signup from 'containers/Signup/Loadable';
-import Header from 'components/Header';
 
 import GlobalStyle from '../../global-styles';
 
@@ -37,12 +36,11 @@ export default function App() {
       >
         <meta name="description" content="A React.js Boilerplate application" />
       </Helmet>
-      <Header />
       <Switch>
         <Route exact path="/" component={Welcome} />
-        <Route exact path="/dashboard" component={Dashboard} />
         <Route exact path="/login" component={Login} />
         <Route exact path="/signup" component={Signup} />
+        <Route component={Dashboard} />
       </Switch>
       <GlobalStyle />
     </AppWrapper>

@@ -1,17 +1,11 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
-import styled from 'styled-components';
+import { useHistory, Switch, Route } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
+import { Spinner } from 'react-bootstrap';
 
-import { Container, Row, Col, Card, Spinner } from 'react-bootstrap';
-
-const StyledCardBody = styled(Card.Body)`
-  max-height: 300px;
-  overflow-y: auto;
-`;
-
-const lorem =
-  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy Lorem Ipsum.";
+import Header from 'components/Header';
+import CampaignEditor from 'containers/CampaignEditor/Loadable';
+import NotFoundPage from 'containers/NotFoundPage/Loadable';
 
 const GET_USER_QUERY = gql`
   query GetUser {
@@ -31,65 +25,20 @@ export default function Dashboard() {
 
   if (loading) return <Spinner animation="border" />;
 
+  const Hello = () => <h3>Hello, {data.getUser.name}</h3>;
+
   return (
-    <Container>
-      <Row>
-        <Col>
-          <h2>Welcome, {data && data.getUser ? data.getUser.name : null}</h2>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <Card>
-            <StyledCardBody>
-              <Card.Title>Title</Card.Title>
-              <Card.Text>{lorem}</Card.Text>
-            </StyledCardBody>
-          </Card>
-        </Col>
-        <Col>
-          <Card>
-            <StyledCardBody>
-              <Card.Title>Title</Card.Title>
-              <Card.Text>Lorem Ipsum</Card.Text>
-            </StyledCardBody>
-          </Card>
-        </Col>
-        <Col>
-          <Card>
-            <StyledCardBody>
-              <Card.Title>Title</Card.Title>
-              <Card.Text>{lorem}</Card.Text>
-            </StyledCardBody>
-          </Card>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <Card>
-            <StyledCardBody>
-              <Card.Title>Title</Card.Title>
-              <Card.Text>{lorem}</Card.Text>
-            </StyledCardBody>
-          </Card>
-        </Col>
-        <Col>
-          <Card>
-            <StyledCardBody>
-              <Card.Title>Title</Card.Title>
-              <Card.Text>{lorem}</Card.Text>
-            </StyledCardBody>
-          </Card>
-        </Col>
-        <Col>
-          <Card>
-            <StyledCardBody>
-              <Card.Title>Title</Card.Title>
-              <Card.Text>{lorem}</Card.Text>
-            </StyledCardBody>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+    <div>
+      <Header />
+      <Switch>
+        <Route exact path="/dashboard" component={Hello} />
+        <Route
+          exact
+          path="/dashboard/campaign-editor"
+          component={CampaignEditor}
+        />
+        <Route component={NotFoundPage} />
+      </Switch>
+    </div>
   );
 }
