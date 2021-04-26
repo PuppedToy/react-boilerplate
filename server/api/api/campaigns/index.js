@@ -1,7 +1,7 @@
-const getUser = require('./getCampaign');
-const createUser = require('./createCampaign');
+const getCampaign = require('./getCampaign');
+const createCampaign = require('./createCampaign');
 
 module.exports = {
-  getUser,
-  createUser,
+  getCampaign,
+  createCampaign,
 };

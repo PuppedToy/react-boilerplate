@@ -190,8 +190,15 @@ type Query {
   token: ID
 }
 
+input EditCampaignInput {
+  id: ID!
+  name: String!
+  # TODO
+}
+
 type Mutation {
   createUser(name: String!, password: String!): String
   createCampaign: Campaign
-  editCampaign(campaign: Campaign!)
+  editCampaign(campaign: EditCampaignInput!): Boolean
+  sendFriendRequest(id: ID!): Boolean
 }
