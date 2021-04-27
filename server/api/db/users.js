@@ -25,9 +25,14 @@ async function getById(id) {
 }
 module.exports.getById = getById;
 
-async function search({ name }) {
+async function search({ name, ids }) {
   const db = await getDatabase('users');
-  const users = await db.find({ name: RegExp(name, 'i') }).toArray();
+
+  const $and = [];
+  if (name) $and.push({ name: RegExp(name, 'i') });
+  if (ids) $and.push({ _id: { $in: ids.map(id => ObjectId(id)) } });
+
+  const users = await db.find({ $and }).toArray();
 
   return users.map(user => ({
     id: user._id,
