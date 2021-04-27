@@ -34,6 +34,11 @@ function Header() {
       name: 'Campaign Editor',
       path: '/dashboard/campaign-editor',
     },
+    {
+      key: 1,
+      name: 'Friends',
+      path: '/dashboard/friends',
+    },
   ];
 
   return (
