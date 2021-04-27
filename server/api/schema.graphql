@@ -181,11 +181,14 @@ type User {
   email: String
   characters: [Character]!
   campaigns: [Campaign]!
+  friends: [ID]!
+  friendRequests: [ID]!
 }
 
 type Query {
   alive: Boolean
   getUser(id: ID): User
+  searchUser(name: String): [User]!
   login(name: String!, password: String!): String
   token: ID
 }

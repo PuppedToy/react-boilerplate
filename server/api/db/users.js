@@ -25,6 +25,17 @@ async function getById(id) {
 }
 module.exports.getById = getById;
 
+async function search({ name }) {
+  const db = await getDatabase('users');
+  const users = await db.find({ name: RegExp(name, 'i') }).toArray();
+
+  return users.map(user => ({
+    id: user._id,
+    ...user,
+  }));
+}
+module.exports.search = search;
+
 async function verify(name, inputPassword) {
   const db = await getDatabase('users');
   const user = await db.findOne({ name });
