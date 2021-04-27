@@ -13,6 +13,8 @@ const GET_USER_QUERY = gql`
     getUser {
       id
       name
+      friends
+      friendRequests
     }
   }
 `;
@@ -26,19 +28,24 @@ export default function Dashboard() {
 
   if (loading) return <Spinner animation="border" />;
 
-  const Hello = () => <h3>Hello, {data.getUser.name}</h3>;
+  const injectUser = Component => props => (
+    <Component {...props} user={data.getUser} />
+  );
 
   return (
     <div>
       <Header />
       <Switch>
-        <Route exact path="/dashboard" component={Hello} />
         <Route
           exact
           path="/dashboard/campaign-editor"
           component={CampaignEditor}
         />
-        <Route exact path="/dashboard/friends" component={Friends} />
+        <Route
+          exact
+          path="/dashboard/friends"
+          component={injectUser(Friends)}
+        />
         <Route component={NotFoundPage} />
       </Switch>
     </div>

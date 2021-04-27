@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useQuery, useLazyQuery, gql } from '@apollo/client';
 import {
@@ -12,13 +13,15 @@ import {
   Alert,
   Col,
 } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
 import { AiOutlineSearch } from 'react-icons/ai';
-import { BsPersonPlusFill } from 'react-icons/bs';
+import { BsPersonPlusFill, BsPersonCheckFill } from 'react-icons/bs';
 
 const GET_FRIENDS_QUERY = gql`
-  query GetCampaignsList {
-    alive
+  query SearchUser($ids: [ID!]) {
+    searchUser(ids: $ids) {
+      id
+      name
+    }
   }
 `;
 
@@ -41,16 +44,13 @@ const RightButton = styled(Button)`
   width: 60px;
 `;
 
-export default function Friends() {
-  const history = useHistory();
+export default function Friends({ user }) {
   const [searchValue, setSearchValue] = useState('');
   const [showError, setShowError] = useState(true);
-  const { /* data, */ error, loading } = useQuery(GET_FRIENDS_QUERY);
+  const getFriendsResults = useQuery(GET_FRIENDS_QUERY, {
+    variables: { ids: user.friends },
+  });
   const [searchUsers, searchUsersResults] = useLazyQuery(SEARCH_USERS_QUERY);
-
-  if (error) {
-    history.push('/');
-  }
 
   const handleSearchButton = () => {
     setShowError(true);
@@ -61,11 +61,42 @@ export default function Friends() {
     });
   };
 
-  if (loading) return <Spinner animation="border" />;
+  if (getFriendsResults.loading) return <Spinner animation="border" />;
+
+  const loadStateAction = userId => {
+    if (getFriendsResults.data && getFriendsResults.data.searchUser) {
+      const areFriendsWithUser = getFriendsResults.data.searchUser.some(
+        ({ id }) => id === userId,
+      );
+
+      if (areFriendsWithUser) {
+        return (
+          <RightButton variant="success">
+            <BsPersonCheckFill />
+          </RightButton>
+        );
+      }
+    }
+
+    return (
+      <RightButton>
+        <BsPersonPlusFill />
+      </RightButton>
+    );
+  };
 
   return (
     <div>
       <Container>
+        {getFriendsResults.error && showError ? (
+          <Alert
+            variant="danger"
+            dismissible
+            onClose={() => setShowError(false)}
+          >
+            {getFriendsResults.error.message}
+          </Alert>
+        ) : null}
         {searchUsersResults.error && showError ? (
           <Alert
             variant="danger"
@@ -111,14 +142,14 @@ export default function Friends() {
                 {searchUsersResults.loading ? (
                   <Spinner animation="border" />
                 ) : (
-                  searchUsersResults.data.searchUser.map(user => (
-                    <ListGroup.Item key={user.id}>
-                      {user.name}
-                      <RightButton>
-                        <BsPersonPlusFill />
-                      </RightButton>
-                    </ListGroup.Item>
-                  ))
+                  searchUsersResults.data.searchUser.map(foundUser =>
+                    foundUser.id !== user.id ? (
+                      <ListGroup.Item key={foundUser.id}>
+                        {foundUser.name}
+                        {loadStateAction(foundUser.id)}
+                      </ListGroup.Item>
+                    ) : null,
+                  )
                 )}
               </ListGroup>
             )}
@@ -131,3 +162,7 @@ export default function Friends() {
     </div>
   );
 }
+
+Friends.propTypes = {
+  user: PropTypes.object,
+};
