@@ -183,6 +183,7 @@ type User {
   campaigns: [Campaign]!
   friends: [ID]!
   friendRequests: [ID]!
+  sentFriendRequests: [ID]!
 }
 
 type Query {

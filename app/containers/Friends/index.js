@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { useQuery, useLazyQuery, gql } from '@apollo/client';
+import { useQuery, useLazyQuery, useMutation, gql } from '@apollo/client';
 import {
   Container,
   ListGroup,
@@ -13,7 +13,7 @@ import {
   Alert,
   Col,
 } from 'react-bootstrap';
-import { AiOutlineSearch } from 'react-icons/ai';
+import { AiOutlineSearch, AiOutlineUpload } from 'react-icons/ai';
 import { BsPersonPlusFill, BsPersonCheckFill } from 'react-icons/bs';
 
 const GET_FRIENDS_QUERY = gql`
@@ -34,6 +34,12 @@ const SEARCH_USERS_QUERY = gql`
   }
 `;
 
+const ADD_FRIEND_MUTATION = gql`
+  mutation SendFriendRequest($id: ID!) {
+    sendFriendRequest(id: $id)
+  }
+`;
+
 const RightButton = styled(Button)`
   margin: 0;
   padding: 0;
@@ -44,13 +50,19 @@ const RightButton = styled(Button)`
   width: 60px;
 `;
 
-export default function Friends({ user }) {
+export default function Friends({ user, refetchUser }) {
   const [searchValue, setSearchValue] = useState('');
   const [showError, setShowError] = useState(true);
   const getFriendsResults = useQuery(GET_FRIENDS_QUERY, {
-    variables: { ids: user.friends },
+    variables: { ids: user.friends }, // Is this useful for something?
   });
   const [searchUsers, searchUsersResults] = useLazyQuery(SEARCH_USERS_QUERY);
+
+  const [addFriend] = useMutation(ADD_FRIEND_MUTATION, {
+    onCompleted: refetchUser,
+  });
+
+  const createAddFriendHandler = id => () => addFriend({ variables: { id } });
 
   const handleSearchButton = () => {
     setShowError(true);
@@ -64,22 +76,28 @@ export default function Friends({ user }) {
   if (getFriendsResults.loading) return <Spinner animation="border" />;
 
   const loadStateAction = userId => {
-    if (getFriendsResults.data && getFriendsResults.data.searchUser) {
-      const areFriendsWithUser = getFriendsResults.data.searchUser.some(
-        ({ id }) => id === userId,
-      );
+    console.log(user, user.friends);
+    const areFriendsWithUser = user.friends.includes(userId);
+    const isFriendRequestSent = user.sentFriendRequests.includes(userId);
 
-      if (areFriendsWithUser) {
-        return (
-          <RightButton variant="success">
-            <BsPersonCheckFill />
-          </RightButton>
-        );
-      }
+    if (areFriendsWithUser) {
+      return (
+        <RightButton variant="success">
+          <BsPersonCheckFill />
+        </RightButton>
+      );
+    }
+
+    if (isFriendRequestSent) {
+      return (
+        <RightButton variant="secondary" disabled>
+          <AiOutlineUpload />
+        </RightButton>
+      );
     }
 
     return (
-      <RightButton>
+      <RightButton onClick={createAddFriendHandler(userId)}>
         <BsPersonPlusFill />
       </RightButton>
     );
@@ -154,8 +172,14 @@ export default function Friends({ user }) {
               </ListGroup>
             )}
           </Tab>
+          <Tab eventKey="ongoing-friends-tab" title="Ongoing Friend Requests">
+            2
+          </Tab>
+          <Tab eventKey="incoming-friends-tab" title="Incoming Friend Requests">
+            3
+          </Tab>
           <Tab eventKey="my-friends-tab" title="My Friends">
-            Hi!
+            4
           </Tab>
         </Tabs>
       </Container>
@@ -165,4 +189,5 @@ export default function Friends({ user }) {
 
 Friends.propTypes = {
   user: PropTypes.object,
+  refetchUser: PropTypes.func,
 };

@@ -15,13 +15,14 @@ const GET_USER_QUERY = gql`
       name
       friends
       friendRequests
+      sentFriendRequests
     }
   }
 `;
 
 export default function Dashboard() {
   const history = useHistory();
-  const { data, error, loading } = useQuery(GET_USER_QUERY);
+  const { data, error, loading, refetch } = useQuery(GET_USER_QUERY);
   if (error) {
     history.push('/');
   }
@@ -29,7 +30,7 @@ export default function Dashboard() {
   if (loading) return <Spinner animation="border" />;
 
   const injectUser = Component => props => (
-    <Component {...props} user={data.getUser} />
+    <Component {...props} user={data.getUser} refetchUser={refetch} />
   );
 
   return (

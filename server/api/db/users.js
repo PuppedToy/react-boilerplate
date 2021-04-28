@@ -10,6 +10,7 @@ const baseUser = {
   email: null,
   friends: [],
   friendRequests: [],
+  sentFriendRequests: [],
 };
 
 async function getById(id) {
@@ -102,22 +103,28 @@ async function sendFriendRequest(idSender, idReceiver) {
         { _id: ObjectId(idSender) },
         {
           $push: { friends: idReceiver },
-          $pull: { friendRequests: idReceiver },
+          $pull: { friendRequests: idReceiver, sentFriendRequests: idReceiver },
         },
       ),
       await db.updateOne(
         { _id: ObjectId(idReceiver) },
         {
           $push: { friends: idSender },
-          $pull: { friendRequests: idSender },
+          $pull: { friendRequests: idSender, sentFriendRequests: idSender },
         },
       ),
     ]);
   } else {
-    await db.updateOne(
-      { _id: ObjectId(idReceiver) },
-      { $push: { friendRequests: idSender } },
-    );
+    await Promise.all([
+      db.updateOne(
+        { _id: ObjectId(idSender) },
+        { $push: { sentFriendRequests: idReceiver } },
+      ),
+      db.updateOne(
+        { _id: ObjectId(idReceiver) },
+        { $push: { friendRequests: idSender } },
+      ),
+    ]);
   }
 
   return true;
