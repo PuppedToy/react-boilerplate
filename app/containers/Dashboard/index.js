@@ -6,6 +6,7 @@ import { Spinner } from 'react-bootstrap';
 import Header from 'components/Header';
 import CampaignEditor from 'containers/CampaignEditor/Loadable';
 import Friends from 'containers/Friends/Loadable';
+import Battle from 'containers/Battle/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 
 const GET_USER_QUERY = gql`
@@ -47,6 +48,7 @@ export default function Dashboard() {
           path="/dashboard/friends"
           component={injectUser(Friends)}
         />
+        <Route exact path="/dashboard/battle" component={injectUser(Battle)} />
         <Route component={NotFoundPage} />
       </Switch>
     </div>

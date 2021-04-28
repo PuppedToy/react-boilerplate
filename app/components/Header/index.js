@@ -39,6 +39,11 @@ function Header() {
       name: 'Friends',
       path: '/dashboard/friends',
     },
+    {
+      key: 2,
+      name: 'Battle',
+      path: '/dashboard/battle',
+    },
   ];
 
   return (
