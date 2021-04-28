@@ -13,7 +13,12 @@ import {
   Alert,
   Col,
 } from 'react-bootstrap';
-import { AiOutlineSearch, AiOutlineUpload } from 'react-icons/ai';
+import {
+  AiOutlineSearch,
+  AiOutlineUpload,
+  AiFillDelete,
+  AiOutlineCheck,
+} from 'react-icons/ai';
 import { BsPersonPlusFill, BsPersonCheckFill } from 'react-icons/bs';
 
 const GET_FRIENDS_QUERY = gql`
@@ -53,8 +58,17 @@ const RightButton = styled(Button)`
 export default function Friends({ user, refetchUser }) {
   const [searchValue, setSearchValue] = useState('');
   const [showError, setShowError] = useState(true);
+
+  // new Set removes duplicates
+  const getFriendsQueryVariables = [
+    ...new Set([
+      ...user.friends,
+      ...user.friendRequests,
+      ...user.sentFriendRequests,
+    ]),
+  ];
   const getFriendsResults = useQuery(GET_FRIENDS_QUERY, {
-    variables: { ids: user.friends }, // Is this useful for something?
+    variables: { ids: getFriendsQueryVariables },
   });
   const [searchUsers, searchUsersResults] = useLazyQuery(SEARCH_USERS_QUERY);
 
@@ -74,6 +88,15 @@ export default function Friends({ user, refetchUser }) {
   };
 
   if (getFriendsResults.loading) return <Spinner animation="border" />;
+
+  const getFriendsFromIds = ids =>
+    ids
+      .map(id =>
+        getFriendsResults.data.searchUser.find(
+          friendData => friendData.id === id,
+        ),
+      )
+      .filter(name => name !== null);
 
   const loadStateAction = userId => {
     const areFriendsWithUser = user.friends.includes(userId);
@@ -172,13 +195,42 @@ export default function Friends({ user, refetchUser }) {
             )}
           </Tab>
           <Tab eventKey="ongoing-friends-tab" title="Ongoing Friend Requests">
-            2
+            <ListGroup>
+              {getFriendsFromIds(user.sentFriendRequests).map(
+                ({ id, name }) => (
+                  <ListGroup.Item key={`ongoing-friend-${id}`}>
+                    {name}
+                  </ListGroup.Item>
+                ),
+              )}
+            </ListGroup>
           </Tab>
           <Tab eventKey="incoming-friends-tab" title="Incoming Friend Requests">
-            3
+            <ListGroup>
+              {getFriendsFromIds(user.friendRequests).map(({ id, name }) => (
+                <ListGroup.Item key={`incoming-friend-${id}`}>
+                  {name}
+                  <RightButton
+                    variant="success"
+                    onClick={createAddFriendHandler(id)}
+                  >
+                    <AiOutlineCheck />
+                  </RightButton>
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
           </Tab>
           <Tab eventKey="my-friends-tab" title="My Friends">
-            4
+            <ListGroup>
+              {getFriendsFromIds(user.friends).map(({ id, name }) => (
+                <ListGroup.Item key={`friend-${id}`}>
+                  {name}
+                  <RightButton variant="danger">
+                    <AiFillDelete />
+                  </RightButton>
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
           </Tab>
         </Tabs>
       </Container>
