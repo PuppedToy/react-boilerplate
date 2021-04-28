@@ -12,6 +12,7 @@ import {
   Button,
   Alert,
   Col,
+  Badge,
 } from 'react-bootstrap';
 import {
   AiOutlineSearch,
@@ -45,6 +46,12 @@ const ADD_FRIEND_MUTATION = gql`
   }
 `;
 
+const DELETE_FRIEND_MUTATION = gql`
+  mutation DeleteFriend($id: ID!) {
+    deleteFriend(id: $id)
+  }
+`;
+
 const RightButton = styled(Button)`
   margin: 0;
   padding: 0;
@@ -71,12 +78,16 @@ export default function Friends({ user, refetchUser }) {
     variables: { ids: getFriendsQueryVariables },
   });
   const [searchUsers, searchUsersResults] = useLazyQuery(SEARCH_USERS_QUERY);
-
   const [addFriend] = useMutation(ADD_FRIEND_MUTATION, {
+    onCompleted: refetchUser,
+  });
+  const [deleteFriend] = useMutation(DELETE_FRIEND_MUTATION, {
     onCompleted: refetchUser,
   });
 
   const createAddFriendHandler = id => () => addFriend({ variables: { id } });
+  const createDeleteFriendHandler = id => () =>
+    deleteFriend({ variables: { id } });
 
   const handleSearchButton = () => {
     setShowError(true);
@@ -147,6 +158,18 @@ export default function Friends({ user, refetchUser }) {
           </Alert>
         ) : null}
         <Tabs id="friend-tabs">
+          <Tab eventKey="my-friends-tab" title="My Friends">
+            <ListGroup>
+              {getFriendsFromIds(user.friends).map(({ id, name }) => (
+                <ListGroup.Item key={`friend-${id}`}>
+                  {name}
+                  <RightButton variant="danger">
+                    <AiFillDelete onClick={createDeleteFriendHandler(id)} />
+                  </RightButton>
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+          </Tab>
           <Tab eventKey="add-friends-tab" title="Add friends">
             <Form
               onSubmit={e => e.preventDefault()}
@@ -200,12 +223,29 @@ export default function Friends({ user, refetchUser }) {
                 ({ id, name }) => (
                   <ListGroup.Item key={`ongoing-friend-${id}`}>
                     {name}
+                    <RightButton variant="danger">
+                      <AiFillDelete onClick={createDeleteFriendHandler(id)} />
+                    </RightButton>
                   </ListGroup.Item>
                 ),
               )}
             </ListGroup>
           </Tab>
-          <Tab eventKey="incoming-friends-tab" title="Incoming Friend Requests">
+          <Tab
+            eventKey="incoming-friends-tab"
+            title={
+              <span>
+                {user.friendRequests.length > 0 ? (
+                  <span>
+                    <Badge variant="success">
+                      {user.friendRequests.length}
+                    </Badge>{' '}
+                  </span>
+                ) : null}
+                Incoming Friend Requests
+              </span>
+            }
+          >
             <ListGroup>
               {getFriendsFromIds(user.friendRequests).map(({ id, name }) => (
                 <ListGroup.Item key={`incoming-friend-${id}`}>
@@ -215,18 +255,6 @@ export default function Friends({ user, refetchUser }) {
                     onClick={createAddFriendHandler(id)}
                   >
                     <AiOutlineCheck />
-                  </RightButton>
-                </ListGroup.Item>
-              ))}
-            </ListGroup>
-          </Tab>
-          <Tab eventKey="my-friends-tab" title="My Friends">
-            <ListGroup>
-              {getFriendsFromIds(user.friends).map(({ id, name }) => (
-                <ListGroup.Item key={`friend-${id}`}>
-                  {name}
-                  <RightButton variant="danger">
-                    <AiFillDelete />
                   </RightButton>
                 </ListGroup.Item>
               ))}

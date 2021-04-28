@@ -130,3 +130,41 @@ async function sendFriendRequest(idSender, idReceiver) {
   return true;
 }
 module.exports.sendFriendRequest = sendFriendRequest;
+
+async function deleteFriend(idUser, idFriend) {
+  const db = await getDatabase('users');
+  const filters = { friends: true, friendRequests: true, name: true };
+  const [user, friend] = await Promise.all([
+    db.findOne({ _id: ObjectId(idUser) }, filters),
+    db.findOne({ _id: ObjectId(idFriend) }, filters),
+  ]);
+
+  if (!user) throw new Error(`User ${idUser} does not exist`);
+  if (!friend) throw new Error(`User ${idFriend} does not exist`);
+
+  await Promise.all([
+    await db.updateOne(
+      { _id: ObjectId(idUser) },
+      {
+        $pull: {
+          friends: idFriend,
+          friendRequests: idFriend,
+          sentFriendRequests: idFriend,
+        },
+      },
+    ),
+    await db.updateOne(
+      { _id: ObjectId(idFriend) },
+      {
+        $pull: {
+          friends: idUser,
+          friendRequests: idUser,
+          sentFriendRequests: idUser,
+        },
+      },
+    ),
+  ]);
+
+  return true;
+}
+module.exports.deleteFriend = deleteFriend;

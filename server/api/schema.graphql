@@ -205,4 +205,5 @@ type Mutation {
   createCampaign: Campaign
   editCampaign(campaign: EditCampaignInput!): Boolean
   sendFriendRequest(id: ID!): Boolean
+  deleteFriend(id: ID!): Boolean
 }
