@@ -76,7 +76,6 @@ export default function Friends({ user, refetchUser }) {
   if (getFriendsResults.loading) return <Spinner animation="border" />;
 
   const loadStateAction = userId => {
-    console.log(user, user.friends);
     const areFriendsWithUser = user.friends.includes(userId);
     const isFriendRequestSent = user.sentFriendRequests.includes(userId);
 
