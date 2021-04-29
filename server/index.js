@@ -1,6 +1,7 @@
 /* eslint consistent-return:0 import/order:0 */
 
 const express = require('express');
+const socketIo = require('socket.io');
 const logger = require('./logger');
 
 const argv = require('./argv');
@@ -13,7 +14,7 @@ const ngrok =
     : false;
 const { resolve } = require('path');
 const app = express();
-const api = require('./api');
+const { api, socket } = require('./api');
 
 // If you need a backend, e.g. an API, add your custom backend-specific middleware here
 app.use('/api', api);
@@ -37,7 +38,7 @@ app.get('*.js', (req, res, next) => {
 });
 
 // Start your app.
-app.listen(port, host, async err => {
+const server = app.listen(port, host, async err => {
   if (err) {
     return logger.error(err.message);
   }
@@ -55,3 +56,11 @@ app.listen(port, host, async err => {
     logger.appStarted(port, prettyHost);
   }
 });
+
+socket(
+  socketIo(server, {
+    cors: {
+      origin: 'http://localhost:3000',
+    },
+  }),
+);

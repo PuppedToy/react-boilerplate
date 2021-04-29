@@ -3,6 +3,7 @@ import { useHistory, Switch, Route } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
 import { Spinner } from 'react-bootstrap';
 
+import SocketProvider from 'utils/socket';
 import Header from 'components/Header';
 import CampaignEditor from 'containers/CampaignEditor/Loadable';
 import Friends from 'containers/Friends/Loadable';
@@ -23,6 +24,7 @@ const GET_USER_QUERY = gql`
 
 export default function Dashboard() {
   const history = useHistory();
+
   const { data, error, loading, refetch } = useQuery(GET_USER_QUERY);
   if (error) {
     history.push('/');
@@ -35,22 +37,28 @@ export default function Dashboard() {
   );
 
   return (
-    <div>
-      <Header />
-      <Switch>
-        <Route
-          exact
-          path="/dashboard/campaign-editor"
-          component={CampaignEditor}
-        />
-        <Route
-          exact
-          path="/dashboard/friends"
-          component={injectUser(Friends)}
-        />
-        <Route exact path="/dashboard/battle" component={injectUser(Battle)} />
-        <Route component={NotFoundPage} />
-      </Switch>
-    </div>
+    <SocketProvider>
+      <div>
+        <Header />
+        <Switch>
+          <Route
+            exact
+            path="/dashboard/campaign-editor"
+            component={CampaignEditor}
+          />
+          <Route
+            exact
+            path="/dashboard/friends"
+            component={injectUser(Friends)}
+          />
+          <Route
+            exact
+            path="/dashboard/battle"
+            component={injectUser(Battle)}
+          />
+          <Route component={NotFoundPage} />
+        </Switch>
+      </div>
+    </SocketProvider>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useQuery, useLazyQuery, useMutation, gql } from '@apollo/client';
@@ -21,6 +21,8 @@ import {
   AiOutlineCheck,
 } from 'react-icons/ai';
 import { BsPersonPlusFill, BsPersonCheckFill } from 'react-icons/bs';
+
+import { useSocket } from 'utils/socket';
 
 const GET_FRIENDS_QUERY = gql`
   query SearchUser($ids: [ID!]) {
@@ -65,6 +67,13 @@ const RightButton = styled(Button)`
 export default function Friends({ user, refetchUser }) {
   const [searchValue, setSearchValue] = useState('');
   const [showError, setShowError] = useState(true);
+  const socket = useSocket();
+
+  useEffect(() => {
+    socket.on('reload', () => {
+      refetchUser();
+    });
+  }, []);
 
   // new Set removes duplicates
   const getFriendsQueryVariables = [

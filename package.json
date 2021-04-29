@@ -92,6 +92,8 @@
     "react-intl": "2.8.0",
     "react-router-dom": "^5.2.0",
     "sanitize.css": "8.0.0",
+    "socket.io": "^4.0.1",
+    "socket.io-client": "^4.0.1",
     "styled-components": "4.2.0"
   },
   "devDependencies": {

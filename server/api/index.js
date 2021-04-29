@@ -6,6 +6,7 @@ const { graphqlHTTP } = require('express-graphql');
 const { buildSchema } = require('graphql');
 
 const api = require('./api');
+const { socketHandler } = require('./utils/socket');
 const { authMiddleware } = require('./utils/middlewares');
 
 const router = express.Router();
@@ -38,4 +39,4 @@ router.get('/alive', (req, res) => {
   res.send('true');
 });
 
-module.exports = router;
+module.exports = { api: router, socket: socketHandler };
