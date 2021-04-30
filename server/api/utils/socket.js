@@ -1,12 +1,30 @@
 const jwt = require('jsonwebtoken');
+const Room = require('./room');
 
 const sockets = {};
+const rooms = {};
 
 function socketExists(id, type) {
   return (
     Object.hasOwnProperty.call(sockets, id) &&
     (!type || Object.hasOwnProperty.call(sockets[id].sockets, type))
   );
+}
+
+function createRoom(ownerId, type) {
+  const room = new Room(ownerId, type);
+  rooms[room.id] = room;
+  return room.id;
+}
+
+function getRoom({ roomId, userId }) {
+  if (roomId) {
+    return rooms[roomId];
+  }
+  if (userId) {
+    return rooms.find(room => room.users.find(user => user.id === userId));
+  }
+  throw new Error('Not specified any query to get a room');
 }
 
 function sendMessage(ids, type, message, payload = {}) {
@@ -40,33 +58,48 @@ function socketHandler(io) {
     let socketType;
     socket.emit('hello');
 
-    socket.on('hello', ({ token, type }) => {
-      const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-      if (decodedToken && decodedToken.id) {
-        // eslint-disable-next-line prefer-destructuring
-        id = decodedToken.id;
-        socketType = type;
-        if (!socketExists(id)) {
-          sockets[id] = {
-            sockets: {},
-          };
+    try {
+      socket.on('hello', ({ token, type }) => {
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        if (decodedToken && decodedToken.id) {
+          // eslint-disable-next-line prefer-destructuring
+          id = decodedToken.id;
+          socketType = type;
+          if (!socketExists(id)) {
+            sockets[id] = {
+              sockets: {},
+            };
+          }
+          sockets[id].sockets[socketType] = socket;
+          socket.emit('authorized');
+        } else {
+          throw new Error('Unauthorized');
         }
-        sockets[id].sockets[socketType] = socket;
-        socket.emit('authorized');
-      } else {
-        socket.emit('error', { message: 'Unauthorized ' });
-      }
-    });
+      });
 
-    socket.on('disconnect', () => {
-      if (socketExists(id)) {
-        delete sockets[id].sockets[socketType];
-      }
-      if (!Object.keys(sockets[id].sockets).length) {
-        delete sockets[id];
-      }
-    });
+      socket.on('disconnect', () => {
+        if (socketExists(id)) {
+          delete sockets[id].sockets[socketType];
+        }
+        if (!Object.keys(sockets[id].sockets).length) {
+          delete sockets[id];
+        }
+      });
+
+      socket.on('room-connect', ({ roomId }) => {
+        if (!id) {
+          throw new Error('Unauthorized');
+        } else if (Object.hasOwnProperty.call(rooms, roomId)) {
+          rooms[roomId].addUser(id, socket);
+          rooms[roomId].broadcast('room-connect', { userId: id });
+        } else {
+          throw new Error(`Room ${roomId} does not exist`);
+        }
+      });
+    } catch (error) {
+      socket.emit('error', { message: error.message });
+    }
   });
 }
 
-module.exports = { socketHandler, sendMessage };
+module.exports = { socketHandler, createRoom, getRoom, sendMessage };

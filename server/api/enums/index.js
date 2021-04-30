@@ -1,5 +1,6 @@
 const SOCKET_TYPES = {
   DASHBOARD: 'SOCKET_TYPES_DASHBOARD',
+  ROOM: 'SOCKET_TYPES_ROOM',
 };
 
 module.exports = {
