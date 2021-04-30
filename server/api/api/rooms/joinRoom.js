@@ -2,14 +2,13 @@ const { getRoom } = require('../../utils/room');
 const { sendMessage } = require('../../utils/socket');
 const { SOCKET_TYPES } = require('../../enums');
 
-function readyRoomGraphQL({ id, ready }, { userToken }) {
+function joinRoomGraphQL({ id }, { userToken }) {
   const room = getRoom({ roomId: id });
-  room.getUser(userToken.id).ready = ready;
-  sendMessage(room.getUserIds(), SOCKET_TYPES.DASHBOARD, 'room-ready', {
+  room.addUser(userToken.id, { ready: false });
+  sendMessage(room.getUserIds(), SOCKET_TYPES.DASHBOARD, 'room-join', {
     userId: userToken.id,
-    ready,
   });
   return true;
 }
 
-module.exports = readyRoomGraphQL;
+module.exports = joinRoomGraphQL;

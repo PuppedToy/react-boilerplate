@@ -10,36 +10,10 @@ class Room {
     this.users = {};
   }
 
-  emit(userId, message, payload) {
-    if (!userId || !Object.hasOwnProperty.call(this.users, userId)) {
-      throw new Error(`User ${userId} not in room ${this.id}`);
-    }
-
-    if (!message || typeof message !== 'string') {
-      throw new Error(
-        `Expected type to be of message string but found ${typeof type}`,
-      );
-    }
-
-    if (Object.hasOwnProperty.call(this.users[userId], 'socket')) {
-      this.users[userId].socket.emit(message, payload);
-    }
-  }
-
-  broadcast(message, payload) {
-    this.users.forEach(user => {
-      try {
-        this.emit(user.id, message, payload);
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error(error);
-      }
-    });
-  }
-
-  addUser(userId, socket) {
+  addUser(userId, properties = {}) {
     this.users[userId] = {
-      socket,
+      id: userId,
+      ...properties,
     };
   }
 
@@ -47,8 +21,11 @@ class Room {
     return this.users[userId];
   }
 
+  getUserIds() {
+    return this.users.map(({ id }) => id);
+  }
+
   removeUser(userId) {
-    this.users[userId].socket.emit('disconnect');
     delete this.users[userId];
   }
 
@@ -57,4 +34,22 @@ class Room {
   }
 }
 
-module.exports = Room;
+const rooms = {};
+
+function createRoom(ownerId, type) {
+  const room = new Room(ownerId, type);
+  rooms[room.id] = room;
+  return room;
+}
+
+function getRoom({ roomId, userId }) {
+  if (roomId) {
+    return rooms[roomId];
+  }
+  if (userId) {
+    return rooms.find(room => room.users.find(user => user.id === userId));
+  }
+  throw new Error('Not specified any query to get a room');
+}
+
+module.exports = { Room, createRoom, getRoom };

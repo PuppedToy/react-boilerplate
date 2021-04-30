@@ -1,8 +1,9 @@
-const { createRoom } = require('../../utils/socket');
+const { createRoom } = require('../../utils/room');
 
 function createRoomGraphQL({ type }, { userToken }) {
-  const id = createRoom(userToken.id, type);
-  return id;
+  const room = createRoom(userToken.id, type);
+  room.addUser(userToken.id, { ready: false });
+  return room.id;
 }
 
 module.exports = createRoomGraphQL;
