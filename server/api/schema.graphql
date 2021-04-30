@@ -186,12 +186,19 @@ type User {
   sentFriendRequests: [ID]!
 }
 
+type Room {
+  id: ID!
+  ownerId: ID!
+  userList: [ID!]!
+}
+
 type Query {
   alive: Boolean
   getUser(id: ID): User
   searchUser(name: String, ids: [ID!]): [User]!
   login(name: String!, password: String!): String
   token: ID
+  getRoom(id: ID!): Room
 }
 
 input EditCampaignInput {
@@ -206,7 +213,7 @@ type Mutation {
   editCampaign(campaign: EditCampaignInput!): Boolean
   sendFriendRequest(id: ID!): Boolean
   deleteFriend(id: ID!): Boolean
-  createRoom(type: String): ID
+  createRoom(type: String, userList: [ID!]!): ID
   joinRoom(id: ID): Boolean
   readyRoom(id: ID, ready: Boolean): Boolean
 }

@@ -1,9 +1,19 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { useQuery, gql } from '@apollo/client';
+import { useQuery, useLazyQuery, gql } from '@apollo/client';
 import { Container, Spinner, Button, Alert, ListGroup } from 'react-bootstrap';
+import { useLocation } from 'react-router-dom';
 
-const GET_FRIENDS_QUERY = gql`
+// import { useSocket } from 'utils/socket';
+
+const GET_ROOM_QUERY = gql`
+  query GetRoom($id: ID!) {
+    getRoom(id: $id) {
+      userList
+    }
+  }
+`;
+
+const GET_USER_NAMES_QUERY = gql`
   query SearchUser($ids: [ID!]) {
     searchUser(ids: $ids) {
       id
@@ -12,37 +22,63 @@ const GET_FRIENDS_QUERY = gql`
   }
 `;
 
-export default function BattleRoom({ user }) {
+export default function BattleRoom() {
+  const location = useLocation();
+  // const socket = useSocket();
+  // TODO socket things and logics
+
+  const roomId = parseInt(location.pathname.replace(/^.*\//, ''), 10);
+
   const [showError, setShowError] = useState(true);
 
-  const getFriendsResults = useQuery(GET_FRIENDS_QUERY, {
-    variables: { ids: user.friends },
+  const [getUserNames, getUserNamesResults] = useLazyQuery(
+    GET_USER_NAMES_QUERY,
+  );
+  const getRoomResults = useQuery(GET_ROOM_QUERY, {
+    variables: { id: roomId },
+    onCompleted: ({ getRoom }) =>
+      getUserNames({
+        variables: {
+          ids: getRoom.userList,
+        },
+      }),
   });
 
-  if (getFriendsResults.loading) return <Spinner animation="border" />;
+  if (getRoomResults.loading || getUserNamesResults.loading)
+    return <Spinner animation="border" />;
 
   return (
     <div>
       <Container>
-        {getFriendsResults.error && showError ? (
+        {getRoomResults.error && showError ? (
           <Alert
             variant="danger"
             dismissible
             onClose={() => setShowError(false)}
           >
-            {getFriendsResults.error.message}
+            {getRoomResults.error.message}
           </Alert>
         ) : null}
-        <ListGroup>
-          <ListGroup.Item>User 1</ListGroup.Item>
-          <ListGroup.Item>User 2</ListGroup.Item>
-        </ListGroup>
-        <Button>Battle!</Button>
+        {getUserNamesResults.error && showError ? (
+          <Alert
+            variant="danger"
+            dismissible
+            onClose={() => setShowError(false)}
+          >
+            {getUserNamesResults.error.message}
+          </Alert>
+        ) : null}
+        {getUserNamesResults && getUserNamesResults.data ? (
+          <div>
+            <ListGroup>
+              {getUserNamesResults.data.searchUser.map(({ name, id }) => (
+                <ListGroup.Item key={id}>{name}</ListGroup.Item>
+              ))}
+            </ListGroup>
+            <Button>Ready</Button>
+          </div>
+        ) : null}
       </Container>
     </div>
   );
 }
-
-BattleRoom.propTypes = {
-  user: PropTypes.object,
-};

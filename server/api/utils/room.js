@@ -2,12 +2,13 @@ let idCount = 0;
 const MAX_ROOMS = 1000000;
 
 class Room {
-  constructor(ownerId, type) {
+  constructor(ownerId, type, properties = {}) {
     this.id = idCount;
     idCount = (idCount + 1) % MAX_ROOMS;
     this.ownerId = ownerId;
     this.type = type;
     this.users = {};
+    this.properties = properties;
   }
 
   addUser(userId, properties = {}) {
@@ -36,8 +37,8 @@ class Room {
 
 const rooms = {};
 
-function createRoom(ownerId, type) {
-  const room = new Room(ownerId, type);
+function createRoom(ownerId, type, properties) {
+  const room = new Room(ownerId, type, properties);
   rooms[room.id] = room;
   return room;
 }
