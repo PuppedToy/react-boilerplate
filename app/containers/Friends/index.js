@@ -73,6 +73,10 @@ export default function Friends({ user, refetchUser }) {
     socket.on('reload', () => {
       refetchUser();
     });
+
+    return () => {
+      socket.off('reload');
+    };
   }, []);
 
   // new Set removes duplicates

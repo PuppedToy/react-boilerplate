@@ -186,10 +186,21 @@ type User {
   sentFriendRequests: [ID]!
 }
 
+enum UserRoomStates {
+  DISCONNECTED
+  CONNECTED
+  READY
+}
+
+type UserRoom {
+  id: ID!
+  state: UserRoomStates!
+}
+
 type Room {
   id: ID!
   ownerId: ID!
-  userList: [ID!]!
+  userList: [UserRoom!]!
 }
 
 type Query {

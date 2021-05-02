@@ -23,7 +23,7 @@ class Room {
   }
 
   getUserIds() {
-    return this.users.map(({ id }) => id);
+    return Object.keys(this.users);
   }
 
   removeUser(userId) {
