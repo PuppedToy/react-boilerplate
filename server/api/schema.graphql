@@ -59,7 +59,7 @@ enum CampaignRoleType {
   Player
 }
 
-type Stats {
+type Attributes {
   strength: Int!
   dexterity: Int!
   constitution: Int!
@@ -135,7 +135,7 @@ type Character {
   fields: [CharacterField]!
   level: Int!
   exp: Int!
-  stats: Stats!
+  attributes: Attributes!
   skills: [Skill]!
   inventory: [Item]!
   abilities: [Ability]!

@@ -34,6 +34,17 @@ function sendMessage(ids, type, message, payload = {}) {
   socket.emit(message, payload);
 }
 
+function getSocketsByUserId(id) {
+  if (typeof id !== 'string') {
+    throw new Error(`id must be of type string. Instead found ${typeof ids}`);
+  }
+  if (Object.hasOwnProperty.call(sockets, id)) {
+    return sockets[id];
+  }
+
+  return null;
+}
+
 function socketHandler(io) {
   io.on('connection', socket => {
     let id;
@@ -73,4 +84,4 @@ function socketHandler(io) {
   });
 }
 
-module.exports = { socketHandler, sendMessage };
+module.exports = { socketHandler, sendMessage, getSocketsByUserId };

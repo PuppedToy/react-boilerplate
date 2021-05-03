@@ -131,6 +131,8 @@ export default function BattleRoom({ user }) {
     setIAmReady(!iAmReady);
   };
 
+  const everyoneIsReady = userList.every(({ state }) => state === 'READY');
+
   return (
     <div>
       <Container>
@@ -169,7 +171,10 @@ export default function BattleRoom({ user }) {
                 </ListGroup.Item>
               ))}
             </ListGroup>
-            <Button onClick={readyHandler}>Ready</Button>
+            <Button onClick={readyHandler}>Ready</Button>{' '}
+            {getRoomResults.data.getRoom.ownerId === user.id ? (
+              <Button disabled={!everyoneIsReady}>Ready</Button>
+            ) : null}
           </div>
         ) : null}
       </Container>
