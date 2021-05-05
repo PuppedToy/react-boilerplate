@@ -25,6 +25,10 @@ router.use(
   '/pixi',
   express.static(`${__dirname}/../../node_modules/pixi.js/dist/browser`),
 );
+router.use(
+  '/socket.io',
+  express.static(`${__dirname}/../../node_modules/socket.io-client/dist`),
+);
 
 router.use(
   '/graphql',

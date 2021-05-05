@@ -30,12 +30,12 @@ class TestBattle extends Battle {
           {
             user: user1,
             type: 'hero',
-            character: hero1,
+            character: { ...hero1, team: 0 },
           },
           {
             user: user2,
             type: 'hero',
-            character: hero2,
+            character: { ...hero2, team: 0 },
           },
         ],
       },
@@ -45,12 +45,12 @@ class TestBattle extends Battle {
           {
             user: 'bot',
             type: 'minion',
-            character: testMonster,
+            character: { ...testMonster, team: 1 },
           },
           {
             user: 'bot',
             type: 'minion',
-            character: testMonster,
+            character: { ...testMonster, team: 1 },
           },
         ],
       },

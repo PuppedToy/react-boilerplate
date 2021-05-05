@@ -96,6 +96,7 @@ const hero2 = {
     initiative: 11,
     speed: 2,
     maxHp: 32,
+    cardsInHand: 6,
   },
   skills: [],
   inventory: [],
@@ -119,6 +120,7 @@ const testMonster = {
     initiative: 10,
     speed: 1,
     maxHp: 20,
+    cardsInHand: 5,
   },
   moves: [
     {

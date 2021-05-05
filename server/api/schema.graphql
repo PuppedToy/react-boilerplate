@@ -147,7 +147,7 @@ type Enemy {
   picture: String!
   level: Int!
   description: String!
-  stats: Stats!
+  attributes: Attributes!
   alignment: AlignmentType!
   fields: [CharacterField]!
   inventory: [Item]!
