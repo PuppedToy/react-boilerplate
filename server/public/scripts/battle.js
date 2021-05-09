@@ -3,9 +3,18 @@
 
 const socket = io('http://localhost:3000');
 
+// Ingame variables
+let teams;
+let player;
+
 socket.on('hello', () => {
   const token = localStorage.getItem('token');
   socket.emit('hello', { token, type: 'BATTLE' });
+});
+
+socket.on('start', payload => {
+  ({ teams, player } = payload);
+  start(payload.assets);
 });
 
 const app = new PIXI.Application({
@@ -177,10 +186,9 @@ function draggable(sprite) {
 
 function setup() {
   // From outside
-  const hand = [];
+  const { hand } = player;
   const cardSprites = hand.map(card => createCard(card));
   // From outside
-  const teams = {};
 
   teams.forEach(team => {
     const gridSize = parseInt(Math.sqrt(team.length), 10) + 1;

@@ -1,12 +1,21 @@
 const battleManager = require('../../battle/battleManager');
+const { TestBattle, Battle } = require('../../utils/battle');
+const db = require('../../db');
 
-// TODO return creation result instead of true or false
-async function createBattleGraphQL(battle, { userToken }) {
+async function createBattleGraphQL({ battleTemplateId, users }, { userToken }) {
   if (!userToken) throw new Error('User not authenticated');
 
-  const battleId = battleManager.create(battle, userToken.id);
-  // const battle = await db.battles.create(userToken);
-  // return battle;
+  let battle;
+  if (battleTemplateId === null) {
+    battle = new TestBattle(users);
+  } else {
+    const { teams } = db.battles.getTemplate(battleTemplateId);
+    // TODO put users in teams
+    battle = new Battle(teams);
+  }
+  const battleId = await battle.init();
+  battleManager.create(battle, userToken.id);
+
   return battleId;
 }
 

@@ -47,6 +47,7 @@ const basicDeck = [
 const hero1 = {
   id: 0,
   name: 'Jorge Watkins',
+  type: 'hero',
   race: {
     id: 0,
     name: 'human',
@@ -66,17 +67,19 @@ const hero1 = {
     initiative: 10,
     speed: 2,
     maxHp: 28,
+    cardsInHand: 5,
   },
   skills: [],
   inventory: [],
   abilities: [],
-  deck: basicDeck,
+  deck: [...basicDeck],
   picture: 'hero1.jpg',
 };
 
 const hero2 = {
   id: 1,
   name: 'John Estrada',
+  type: 'hero',
   race: {
     id: 0,
     name: 'human',
@@ -101,13 +104,14 @@ const hero2 = {
   skills: [],
   inventory: [],
   abilities: [],
-  deck: basicDeck,
+  deck: [...basicDeck],
   picture: 'hero2.jpg',
 };
 
 const testMonster = {
   id: 2,
   name: 'Test Monster',
+  type: 'minion',
   level: 1,
   attributes: {
     strength: 10,
@@ -120,7 +124,6 @@ const testMonster = {
     initiative: 10,
     speed: 1,
     maxHp: 20,
-    cardsInHand: 5,
   },
   moves: [
     {
