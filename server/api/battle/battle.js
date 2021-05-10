@@ -3,7 +3,7 @@ const moment = require('moment');
 const shuffle = require('shuffle-array');
 
 const db = require('../db');
-const { hero1, hero2, testMonster } = require('./data/characters');
+const { hero1, hero2, testMonster } = require('../utils/data/characters');
 
 class Battle {
   constructor(teams) {

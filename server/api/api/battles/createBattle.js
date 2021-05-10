@@ -1,5 +1,5 @@
 const battleManager = require('../../battle/battleManager');
-const { TestBattle, Battle } = require('../../utils/battle');
+const { TestBattle, Battle } = require('../../battle/battle');
 const db = require('../../db');
 
 async function createBattleGraphQL({ battleTemplateId, users }, { userToken }) {
