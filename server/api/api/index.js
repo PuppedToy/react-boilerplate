@@ -1,6 +1,7 @@
 const users = require('./users');
 const campaigns = require('./campaigns');
 const rooms = require('./rooms');
+const battles = require('./battles');
 
 module.exports = {
   alive: () => true,
@@ -8,4 +9,5 @@ module.exports = {
   ...users,
   ...campaigns,
   ...rooms,
+  ...battles,
 };

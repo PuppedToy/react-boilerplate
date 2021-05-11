@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery, useLazyQuery, useMutation, gql } from '@apollo/client';
 import { Container, Spinner, Button, Alert, ListGroup } from 'react-bootstrap';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import {
   AiOutlineEllipsis,
   AiOutlineCheck,
@@ -44,10 +44,17 @@ const READY_ROOM_MUTATION = gql`
   }
 `;
 
+const CREATE_BATTLE_MUTATION = gql`
+  mutation CreateBattle($users: [ID!]!) {
+    createBattle(users: $users)
+  }
+`;
+
 // TODO on dismount, leave user
 // TOD on disconnect, leave user (this might have to send a disconnect-user event to every user in a room automatically)
 export default function BattleRoom({ user }) {
   const location = useLocation();
+  const history = useHistory();
   const socket = useSocket();
 
   const roomId = parseInt(location.pathname.replace(/^.*\//, ''), 10);
@@ -73,6 +80,11 @@ export default function BattleRoom({ user }) {
     },
   });
   const [readyRoom] = useMutation(READY_ROOM_MUTATION);
+  const [createBattle] = useMutation(CREATE_BATTLE_MUTATION, {
+    variables: {
+      users: getRoomResults.data.getRoom.userList.map(({ id }) => id),
+    },
+  });
 
   useEffect(() => {
     socket.on('room-join', () => {
@@ -85,10 +97,19 @@ export default function BattleRoom({ user }) {
         getRoomResults.refetch();
       }
     });
+    socket.on('battle-start', ({ battleId }) => {
+      const win = window.open(
+        `/api/public/battle.html?battleId=${battleId}`,
+        '_blank',
+      );
+      win.focus();
+      history.push('/dashboard');
+    });
 
     return () => {
       socket.off('room-join');
       socket.off('room-ready');
+      socket.off('battle-start');
     };
   }, []);
 
@@ -129,6 +150,10 @@ export default function BattleRoom({ user }) {
       },
     });
     setIAmReady(!iAmReady);
+  };
+
+  const startHandler = () => {
+    createBattle();
   };
 
   const everyoneIsReady = userList.every(({ state }) => state === 'READY');
@@ -173,7 +198,9 @@ export default function BattleRoom({ user }) {
             </ListGroup>
             <Button onClick={readyHandler}>Ready</Button>{' '}
             {getRoomResults.data.getRoom.ownerId === user.id ? (
-              <Button disabled={!everyoneIsReady}>Ready</Button>
+              <Button onClick={startHandler} disabled={!everyoneIsReady}>
+                Start
+              </Button>
             ) : null}
           </div>
         ) : null}
