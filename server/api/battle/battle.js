@@ -44,11 +44,11 @@ class Battle {
       }
     }
 
-    this.characterCheckEmtpyDeck();
+    this.characterCheckEmtpyDeck(character);
     const card = character.deck.shift();
     if (card) {
       character.hand.push(card);
-      this.characterCheckEmtpyDeck();
+      this.characterCheckEmtpyDeck(character);
     }
     // Else there are no cards either in discard pile nor deck. Draw is impossible
   }

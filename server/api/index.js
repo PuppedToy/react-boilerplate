@@ -36,6 +36,13 @@ router.use(
     schema: MyGraphQLSchema,
     rootValue: api,
     graphiql: true,
+    customFormatErrorFn: error => {
+      console.error(error);
+      return {
+        message: error.message,
+        stack: error.stack,
+      };
+    },
   }),
 );
 

@@ -8,7 +8,7 @@ async function createBattleGraphQL({ battleTemplateId, users }, { userToken }) {
   if (!userToken) throw new Error('User not authenticated');
 
   let battle;
-  if (battleTemplateId === null) {
+  if (!battleTemplateId) {
     battle = new TestBattle(users);
   } else {
     const { teams } = db.battles.getTemplate(battleTemplateId);

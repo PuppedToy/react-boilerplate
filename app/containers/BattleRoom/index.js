@@ -80,11 +80,7 @@ export default function BattleRoom({ user }) {
     },
   });
   const [readyRoom] = useMutation(READY_ROOM_MUTATION);
-  const [createBattle] = useMutation(CREATE_BATTLE_MUTATION, {
-    variables: {
-      users: getRoomResults.data.getRoom.userList.map(({ id }) => id),
-    },
-  });
+  const [createBattle] = useMutation(CREATE_BATTLE_MUTATION);
 
   useEffect(() => {
     socket.on('room-join', () => {
@@ -153,7 +149,11 @@ export default function BattleRoom({ user }) {
   };
 
   const startHandler = () => {
-    createBattle();
+    createBattle({
+      variables: {
+        users: getRoomResults.data.getRoom.userList.map(({ id }) => id),
+      },
+    });
   };
 
   const everyoneIsReady = userList.every(({ state }) => state === 'READY');
