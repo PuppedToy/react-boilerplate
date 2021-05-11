@@ -1,4 +1,5 @@
 const db = require('../db');
+const { USER_BATTLE_STATES } = require('../enums');
 
 class BattleManager {
   constructor() {
@@ -37,18 +38,29 @@ class BattleManager {
       battleId,
       userId,
     );
+
+    battle.setUserState(userId, USER_BATTLE_STATES.ONLINE);
+    console.log(`Player ${userId} connected to battle ${battleId}`);
+    if (battle.isEveryoneConnected()) {
+      const payload = {
+        teams: battle.teams,
+        player: receiverUserId => battle.getCharactersFromUser(receiverUserId),
+      };
+      this.broadcastBattle(battleId, 'battle-start', payload);
+    }
   }
 
   createSocketHandlers(socket, battleId, userId) {
-    // TODO socket.on...
-    socket.on('ping', () => {
-      socket.emit('ping', { battleId, userId });
+    socket.on('battle-status', () => {
+      const battle = this.getBattle(battleId);
+      const battleStatus = battle.getBattleStatus(userId);
+      socket.emit('battle-status-response', battleStatus);
     });
 
     return socket;
   }
 
-  broadcastBattle(battleId, message, payload) {
+  broadcastBattle(battleId, message, rawPayload) {
     if (!message || typeof message !== 'string') {
       throw new Error(
         `Expected type of message string but found "${typeof message}"`,
@@ -57,7 +69,15 @@ class BattleManager {
 
     const battle = this.getBattle(battleId);
 
-    Object.values(battle.sockets).forEach(socket => {
+    const payloadFunctionKeys = Object.entries(rawPayload)
+      .filter(entry => typeof entry[1] === 'function')
+      .map(([key]) => key);
+
+    Object.entries(battle.sockets).forEach(([userId, socket]) => {
+      const payload = { ...rawPayload };
+      payloadFunctionKeys.forEach(key => {
+        payload[key] = payload[key](userId);
+      });
       socket.emit(message, payload);
     });
   }

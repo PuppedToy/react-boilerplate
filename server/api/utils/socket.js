@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 
+const battleManager = require('../battle/battleManager');
+
 const sockets = {};
 
 function socketExists(id, type) {
@@ -66,7 +68,7 @@ function socketHandler(io) {
           sockets[id].sockets[socketType] = socket;
           socket.emit('authorized');
         } else {
-          throw new Error('Unauthorized');
+          socket.emit('unauthorized');
         }
       });
 
@@ -77,6 +79,10 @@ function socketHandler(io) {
         if (!Object.keys(sockets[id].sockets).length) {
           delete sockets[id];
         }
+      });
+
+      socket.on('battle-connect', ({ battleId }) => {
+        battleManager.connect(battleId, id, socket);
       });
     } catch (error) {
       socket.emit('error', { message: error.message });

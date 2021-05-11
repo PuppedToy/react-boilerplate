@@ -4,12 +4,23 @@ const shuffle = require('shuffle-array');
 
 const db = require('../db');
 const { hero1, hero2, testMonster } = require('../utils/data/characters');
+const { USER_BATTLE_STATES } = require('../enums');
 
 class Battle {
   constructor(teams) {
     this.teams = teams;
     this.date = moment().format('MM-DD-YYYY');
     this.prepareCharacters();
+    this.users = {};
+    this.teams.forEach(team => {
+      team.members.forEach(member => {
+        if (!Object.hasOwnProperty.call(this.users, member.user)) {
+          this.users[member.user] = {
+            state: USER_BATTLE_STATES.DISCONNECTED,
+          };
+        }
+      });
+    });
   }
 
   async init() {
@@ -17,8 +28,9 @@ class Battle {
     this.id = id;
   }
 
-  userDraw(userId, amountCards = 1) {
-    const character = this.getCharacterFromUser(userId);
+  userDraw(userId, characterIndex, amountCards = 1) {
+    const characters = this.getCharactersFromUser(userId);
+    const character = characters[characterIndex];
     if (!character) throw new Error(`Character from user ${userId} not found`);
 
     this.characterDraw(character, amountCards);
@@ -79,13 +91,40 @@ class Battle {
     });
   }
 
-  getCharacterFromUser(userId) {
+  getCharactersFromUser(userId) {
     for (let teamIndex = 0; teamIndex < this.teams.length; teamIndex += 1) {
       const { members } = this.teams[teamIndex];
       const member = members.find(({ user }) => user === userId);
-      if (member) return member.character;
+      if (member) return member.characters;
     }
     return null;
+  }
+
+  getBattleStatus(userId) {
+    const playerCharacters = this.getCharactersFromUser(userId);
+    const { id, teams, users } = this;
+    return {
+      id,
+      userId,
+      teams,
+      users,
+      playerCharacters,
+    };
+  }
+
+  isEveryoneConnected() {
+    return Object.values(this.users).every(
+      ({ state }) =>
+        state === USER_BATTLE_STATES.ONLINE ||
+        state === USER_BATTLE_STATES.SLOW_CONNECTION,
+    );
+  }
+
+  setUserState(userId, state) {
+    if (!Object.hasOwnProperty.call(this.users, userId)) {
+      throw new Error(`User ${userId} does not exist on this battle`);
+    }
+    this.users[userId].state = state;
   }
 
   toObject() {

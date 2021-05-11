@@ -12,7 +12,11 @@ socket.on('hello', () => {
   socket.emit('hello', { token, type: 'BATTLE' });
 });
 
-socket.on('start', payload => {
+socket.on('unauthorized', () => {
+  window.href = '/login';
+});
+
+socket.on('battle-start', payload => {
   ({ teams, player } = payload);
   start(payload.assets);
 });
@@ -185,10 +189,8 @@ function draggable(sprite) {
 }
 
 function setup() {
-  // From outside
   const { hand } = player;
   const cardSprites = hand.map(card => createCard(card));
-  // From outside
 
   teams.forEach(team => {
     const gridSize = parseInt(Math.sqrt(team.length), 10) + 1;
