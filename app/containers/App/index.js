@@ -16,6 +16,7 @@ import Dashboard from 'containers/Dashboard/Loadable';
 import Login from 'containers/Login/Loadable';
 import Signup from 'containers/Signup/Loadable';
 
+import SocketProvider from 'utils/socket';
 import GlobalStyle from '../../global-styles';
 
 const AppWrapper = styled.div`
@@ -30,19 +31,24 @@ const AppWrapper = styled.div`
 export default function App() {
   return (
     <AppWrapper>
-      <Helmet
-        titleTemplate="%s - React.js Boilerplate"
-        defaultTitle="React.js Boilerplate"
-      >
-        <meta name="description" content="A React.js Boilerplate application" />
-      </Helmet>
-      <Switch>
-        <Route exact path="/" component={Welcome} />
-        <Route exact path="/login" component={Login} />
-        <Route exact path="/signup" component={Signup} />
-        <Route component={Dashboard} />
-      </Switch>
-      <GlobalStyle />
+      <SocketProvider>
+        <Helmet
+          titleTemplate="%s - React.js Boilerplate"
+          defaultTitle="React.js Boilerplate"
+        >
+          <meta
+            name="description"
+            content="A React.js Boilerplate application"
+          />
+        </Helmet>
+        <Switch>
+          <Route exact path="/" component={Welcome} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/signup" component={Signup} />
+          <Route component={Dashboard} />
+        </Switch>
+        <GlobalStyle />
+      </SocketProvider>
     </AppWrapper>
   );
 }

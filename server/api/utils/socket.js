@@ -55,7 +55,12 @@ function socketHandler(io) {
 
     try {
       socket.on('hello', ({ token, type }) => {
-        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        let decodedToken;
+        try {
+          decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        } catch (error) {
+          // Ignore
+        }
         if (decodedToken && decodedToken.id) {
           // eslint-disable-next-line prefer-destructuring
           id = decodedToken.id;
