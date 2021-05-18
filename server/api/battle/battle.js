@@ -26,6 +26,7 @@ class Battle {
   async init() {
     const id = await db.battles.create(this.toObject());
     this.id = id;
+    return this.id;
   }
 
   userDraw(userId, characterIndex, amountCards = 1) {
