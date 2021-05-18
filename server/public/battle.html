@@ -7,9 +7,29 @@
   	* {
   		margin: 0;
   	}
+
+    #error-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #FFC0C0;
+      color: #9B3636;
+      border-bottom: 1px solid #9B3636;
+      height: auto;
+      z-index: 10;
+      font-size: 16px;
+      padding: 20px;
+    }
+
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
+  <div id="error-container" class=""></div>
+
   <script src="/api/pixi/pixi.min.js"></script>
   <script src="/api/public/scripts/utils.js"></script>
   <script src="/api/socket.io/socket.io.min.js"></script>

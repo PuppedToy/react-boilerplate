@@ -2,6 +2,7 @@
 /* eslint-disable no-param-reassign */
 
 const socket = io('http://localhost:3000');
+const battleId = window.location.href.replace(/.*battleId=/, '');
 
 // Ingame variables
 let teams;
@@ -9,15 +10,34 @@ let player;
 
 socket.on('hello', () => {
   const token = localStorage.getItem('token');
+  console.log(`Received hello. Emitting hello with token ${token}`);
   socket.emit('hello', { token, type: 'BATTLE' });
 });
 
+socket.on('error', ({ message }) => {
+  const errorContainer = document.getElementById('error-container');
+  errorContainer.innerHTML = message;
+  errorContainer.classList.remove('hidden');
+  setTimeout(() => {
+    errorContainer.classList.add('hidden');
+  }, 10000);
+  console.error(message);
+});
+
 socket.on('unauthorized', () => {
-  window.href = '/login';
+  window.location.href = '/login';
+});
+
+socket.on('authorized', () => {
+  console.log(
+    `Received authorized. Sending battle-connect with battleId ${battleId}`,
+  );
+  socket.emit('battle-connect', { battleId });
 });
 
 socket.on('battle-start', payload => {
   ({ teams, player } = payload);
+  console.log('Received battle-start with the following payload', payload);
   start(payload.assets);
 });
 

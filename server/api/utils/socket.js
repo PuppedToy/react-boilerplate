@@ -11,6 +11,10 @@ function socketExists(id, type) {
   );
 }
 
+function handleError(socket, error) {
+  socket.emit('error', { message: error.message });
+}
+
 function sendMessage(ids, type, message, payload = {}) {
   if (!(ids instanceof Array) && typeof ids !== 'string') {
     throw new Error(
@@ -53,45 +57,45 @@ function socketHandler(io) {
     let socketType;
     socket.emit('hello');
 
-    try {
-      socket.on('hello', ({ token, type }) => {
-        let decodedToken;
-        try {
-          decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-        } catch (error) {
-          // Ignore
+    socket.on('hello', ({ token, type }) => {
+      let decodedToken;
+      try {
+        decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+      } catch (error) {
+        // Ignore
+      }
+      if (decodedToken && decodedToken.id) {
+        // eslint-disable-next-line prefer-destructuring
+        id = decodedToken.id;
+        socketType = type;
+        if (!socketExists(id)) {
+          sockets[id] = {
+            sockets: {},
+          };
         }
-        if (decodedToken && decodedToken.id) {
-          // eslint-disable-next-line prefer-destructuring
-          id = decodedToken.id;
-          socketType = type;
-          if (!socketExists(id)) {
-            sockets[id] = {
-              sockets: {},
-            };
-          }
-          sockets[id].sockets[socketType] = socket;
-          socket.emit('authorized');
-        } else {
-          socket.emit('unauthorized');
-        }
-      });
+        sockets[id].sockets[socketType] = socket;
+        socket.emit('authorized');
+      } else {
+        socket.emit('unauthorized');
+      }
+    });
 
-      socket.on('disconnect', () => {
-        if (socketExists(id)) {
-          delete sockets[id].sockets[socketType];
-        }
+    socket.on('disconnect', () => {
+      if (socketExists(id)) {
+        delete sockets[id].sockets[socketType];
         if (!Object.keys(sockets[id].sockets).length) {
           delete sockets[id];
         }
-      });
+      }
+    });
 
-      socket.on('battle-connect', ({ battleId }) => {
+    socket.on('battle-connect', ({ battleId }) => {
+      try {
         battleManager.connect(battleId, id, socket);
-      });
-    } catch (error) {
-      socket.emit('error', { message: error.message });
-    }
+      } catch (error) {
+        handleError(socket, error);
+      }
+    });
   });
 }
 
