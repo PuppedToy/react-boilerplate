@@ -13,19 +13,21 @@ class Battle {
     this.prepareCharacters();
     this.users = {};
     this.teams.forEach(team => {
-      team.members.forEach(member => {
-        if (!Object.hasOwnProperty.call(this.users, member.user)) {
-          this.users[member.user] = {
-            state: USER_BATTLE_STATES.DISCONNECTED,
-          };
-        }
-      });
+      team.members
+        .filter(({ user }) => user !== 'bot')
+        .forEach(member => {
+          if (!Object.hasOwnProperty.call(this.users, member.user)) {
+            this.users[member.user] = {
+              state: USER_BATTLE_STATES.DISCONNECTED,
+            };
+          }
+        });
     });
   }
 
   async init() {
     const id = await db.battles.create(this.toObject());
-    this.id = id;
+    this.id = String(id);
     return this.id;
   }
 
@@ -92,11 +94,34 @@ class Battle {
     });
   }
 
+  getAssets() {
+    const prefix = '/api/public/images/';
+    const assets = ['cardoutline.png'];
+    this.teams.forEach(team => {
+      team.members.forEach(member => {
+        if (
+          member.character.picture &&
+          !assets.includes(member.character.picture)
+        ) {
+          assets.push(member.character.picture);
+        }
+        if (member.character.deck) {
+          member.character.deck.forEach(card => {
+            if (card.picture && !assets.includes(card.picture)) {
+              assets.push(card.picture);
+            }
+          });
+        }
+      });
+    });
+    return assets.map(asset => `${prefix}${asset}`);
+  }
+
   getCharactersFromUser(userId) {
     for (let teamIndex = 0; teamIndex < this.teams.length; teamIndex += 1) {
       const { members } = this.teams[teamIndex];
       const member = members.find(({ user }) => user === userId);
-      if (member) return member.characters;
+      if (member) return member.character;
     }
     return null;
   }

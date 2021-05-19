@@ -3,6 +3,7 @@
 
 const socket = io('http://localhost:3000');
 const battleId = window.location.href.replace(/.*battleId=/, '');
+const ASSET_PREFIX = '/api/public/images/';
 
 // Ingame variables
 let teams;
@@ -138,10 +139,10 @@ function createCard({ picture, cost }) {
     fontSize: 16,
     align: 'center',
   });
-  cost.position.set(5, 2);
+  costSprite.position.set(5, 2);
   container.addChild(costSprite);
   const drawing = new PIXI.Sprite(
-    PIXI.Loader.shared.resources[picture].texture,
+    PIXI.Loader.shared.resources[`${ASSET_PREFIX}${picture}`].texture,
   );
   drawing.position.set(20, 20);
   drawing.width = 180;
@@ -186,7 +187,7 @@ function createCharacterSprite(character, gridSize, id, teamsNumber) {
   container.addChild(graphics);
 
   const sprite = new PIXI.Sprite(
-    PIXI.Loader.shared.resources[character.pic].texture,
+    PIXI.Loader.shared.resources[`${ASSET_PREFIX}${character.picture}`].texture,
   );
   sprite.position.set(x + 5, y + 5);
   sprite.width = picSize - 10;
@@ -213,8 +214,8 @@ function setup() {
   const cardSprites = hand.map(card => createCard(card));
 
   teams.forEach(team => {
-    const gridSize = parseInt(Math.sqrt(team.length), 10) + 1;
-    team.forEach((character, id) => {
+    const gridSize = parseInt(Math.sqrt(team.members.length), 10) + 1;
+    team.members.forEach(({ character }, id) => {
       const characterSprite = createCharacterSprite(
         character,
         gridSize,

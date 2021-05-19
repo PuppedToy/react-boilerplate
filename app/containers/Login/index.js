@@ -69,6 +69,9 @@ export default function Login() {
                   placeholder="Username"
                   value={name}
                   onChange={e => setName(e.target.value)}
+                  onKeyUp={e =>
+                    e && e.key === 'Enter' ? handleSubmit() : null
+                  }
                 />
               </Form.Group>
               <Form.Group controlId="formBasicEmail">
@@ -78,6 +81,9 @@ export default function Login() {
                   placeholder="Password"
                   value={password}
                   onChange={e => setPassword(e.target.value)}
+                  onKeyUp={e =>
+                    e && e.key === 'Enter' ? handleSubmit() : null
+                  }
                 />
               </Form.Group>
               <Button variant="primary" type="button" onClick={handleSubmit}>

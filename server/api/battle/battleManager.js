@@ -1,4 +1,3 @@
-const db = require('../db');
 const { USER_BATTLE_STATES } = require('../enums');
 
 class BattleManager {
@@ -6,11 +5,11 @@ class BattleManager {
     this.battles = {};
   }
 
-  async create(battle, creatorId) {
-    const battleId = await db.battles.create(battle);
-    this.battles[battleId] = {
-      originalState: { ...battle },
-      id: battleId,
+  create(battle, creatorId) {
+    this.battles[battle.id] = {
+      originalState: { ...battle }, // This might need to be a deep copy
+      state: battle,
+      id: battle.id,
       creatorId,
       sockets: {},
     };
@@ -29,7 +28,7 @@ class BattleManager {
       throw new Error('User ID is required');
     }
     if (Object.hasOwnProperty.call(battle.sockets, userId)) {
-      battle.sockets[userId].emit('disconnect');
+      battle.sockets[userId].disconnect();
       delete battle.sockets[userId];
     }
 
@@ -39,12 +38,16 @@ class BattleManager {
       userId,
     );
 
-    battle.setUserState(userId, USER_BATTLE_STATES.ONLINE);
-    console.log(`Player ${userId} connected to battle ${battleId}`);
-    if (battle.isEveryoneConnected()) {
+    battle.state.setUserState(userId, USER_BATTLE_STATES.ONLINE);
+    console.log(
+      `Player ${userId} connected to battle ${battleId}. Is everyone connected: ${battle.state.isEveryoneConnected()}`,
+    );
+    if (battle.state.isEveryoneConnected()) {
       const payload = {
-        teams: battle.teams,
-        player: receiverUserId => battle.getCharactersFromUser(receiverUserId),
+        teams: battle.state.teams,
+        player: receiverUserId =>
+          battle.state.getCharactersFromUser(receiverUserId),
+        assets: battle.state.getAssets(),
       };
       this.broadcastBattle(battleId, 'battle-start', payload);
     }

@@ -2,6 +2,7 @@ const basicAttackCard = {
   id: 0,
   name: 'Basic Attack',
   cost: 1,
+  picture: 'sword.png',
   effects: [
     {
       type: 'damage',
@@ -15,6 +16,7 @@ const basicDefenseCard = {
   id: 1,
   name: 'Basic Defense',
   cost: 1,
+  picture: 'shield.png',
   effects: [
     {
       type: 'addArmor',
