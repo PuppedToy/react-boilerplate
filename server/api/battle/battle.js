@@ -96,7 +96,7 @@ class Battle {
 
   getAssets() {
     const prefix = '/api/public/images/';
-    const assets = ['cardoutline.png'];
+    const assets = ['cardoutline.png', 'deck.png'];
     this.teams.forEach(team => {
       team.members.forEach(member => {
         if (

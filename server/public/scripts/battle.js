@@ -209,8 +209,40 @@ function draggable(sprite) {
     .on('touchmove', onDragMove);
 }
 
+function buildDeck({ deck, deckSize, deckMargin, reversed = false }) {
+  const deckSprite = new PIXI.Sprite(
+    PIXI.Loader.shared.resources[`${ASSET_PREFIX}deck.png`].texture,
+  );
+  const deckX = reversed ? app.renderer.width - deckMargin : deckMargin;
+  const deckY = app.renderer.height - deckMargin - deckSize;
+  deckSprite.position.set(deckX, deckY);
+  deckSprite.height = deckSize;
+  deckSprite.width = reversed ? -deckSize : deckSize;
+  app.stage.addChild(deckSprite);
+
+  const deckCardNumberCircleSprite = new PIXI.Graphics();
+  deckCardNumberCircleSprite.beginFill(0xffffff);
+  deckCardNumberCircleSprite.lineStyle(2, 0x000000);
+  deckCardNumberCircleSprite.drawCircle(9, 9, 14);
+  const deckCardNumberSprite = new PIXI.Text(deck.length, {
+    fontFamily: 'Arial',
+    fontSize: 16,
+    align: 'center',
+  });
+  const deckCardNumberContainer = new PIXI.Container();
+  deckCardNumberContainer.addChild(deckCardNumberCircleSprite);
+  deckCardNumberContainer.addChild(deckCardNumberSprite);
+  deckCardNumberContainer.position.set(
+    reversed
+      ? app.renderer.width - deckSize - 2 * deckMargin
+      : deckSize + deckMargin,
+    app.renderer.height - deckMargin - deckSize,
+  );
+  app.stage.addChild(deckCardNumberContainer);
+}
+
 function setup() {
-  const { hand } = player;
+  const { hand, deck, discardPile } = player;
   const cardSprites = hand.map(card => createCard(card));
 
   teams.forEach(team => {
@@ -254,5 +286,15 @@ function setup() {
     card.angle = angle;
     card.origin = { x, y, angle };
     app.stage.addChild(card);
+  });
+
+  const DECK_SIZE = 100;
+  const DECK_MARGIN = 20;
+  buildDeck({ deck, deckSize: DECK_SIZE, deckMargin: DECK_MARGIN });
+  buildDeck({
+    deck: discardPile,
+    deckSize: DECK_SIZE,
+    deckMargin: DECK_MARGIN,
+    reversed: true,
   });
 }
